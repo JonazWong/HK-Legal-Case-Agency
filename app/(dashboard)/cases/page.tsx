@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -43,7 +43,7 @@ export default function CasesPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchCases = async () => {
+  const fetchCases = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -73,11 +73,11 @@ export default function CasesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, statusFilter, search]);
 
   useEffect(() => {
     fetchCases();
-  }, [page, statusFilter, search]);
+  }, [fetchCases]);
 
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
