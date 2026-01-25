@@ -14,6 +14,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Card } from '@/components/ui/card';
+import { formatFullName } from '@/lib/utils';
 
 interface Client {
   id: string;
@@ -72,10 +73,6 @@ export default function ClientsPage() {
     e.preventDefault();
     setPage(1);
     fetchClients();
-  };
-
-  const formatFullName = (lastName: string, firstName: string) => {
-    return `${lastName}, ${firstName}`;
   };
 
   return (

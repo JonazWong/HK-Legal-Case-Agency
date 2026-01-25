@@ -12,6 +12,7 @@ import {
   CardContent,
   CardDescription,
 } from '@/components/ui/card';
+import { formatFullName, formatDate } from '@/lib/utils';
 import {
   Table,
   TableBody,
@@ -122,15 +123,6 @@ export default function ClientViewPage() {
       default:
         return 'default';
     }
-  };
-
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return 'N/A';
-    return new Date(dateString).toLocaleDateString('en-GB');
-  };
-
-  const formatFullName = (lastName: string, firstName: string) => {
-    return `${lastName}, ${firstName}`;
   };
 
   if (loading) {

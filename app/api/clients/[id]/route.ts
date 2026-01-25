@@ -110,13 +110,8 @@ export async function PUT(
       occupation: validatedData.occupation || null,
       company: validatedData.company || null,
       notes: validatedData.notes || null,
+      dateOfBirth: validatedData.dateOfBirth ? new Date(validatedData.dateOfBirth) : null,
     };
-
-    if (validatedData.dateOfBirth) {
-      updateData.dateOfBirth = new Date(validatedData.dateOfBirth);
-    } else {
-      updateData.dateOfBirth = null;
-    }
 
     const updatedClient = await prisma.client.update({
       where: { id: params.id },

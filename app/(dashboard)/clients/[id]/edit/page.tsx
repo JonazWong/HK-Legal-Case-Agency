@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { toDateInputValue } from '@/lib/utils';
 
 interface ClientData {
   id: string;
@@ -68,7 +69,7 @@ export default function EditClientPage() {
         alternatePhone: data.alternatePhone || '',
         address: data.address || '',
         idNumber: data.idNumber || '',
-        dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth).toISOString().split('T')[0] : '',
+        dateOfBirth: toDateInputValue(data.dateOfBirth),
         occupation: data.occupation || '',
         company: data.company || '',
         notes: data.notes || '',
