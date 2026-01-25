@@ -105,8 +105,63 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Premium Features Section */}
+      <section className="py-20 bg-off-white border-t-4 border-subtle-gold">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-block px-4 py-1 bg-subtle-gold text-charcoal text-sm font-semibold rounded-full mb-4">
+              企業版專享
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-teal-dark mb-4">高級功能</h2>
+            <p className="text-lg text-cool-gray">為專業律所提供更強大的管理工具</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white p-6 rounded-lg border-2 border-subtle-gold hover:shadow-xl transition-shadow">
+              <div className="w-12 h-12 bg-subtle-gold rounded-lg flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-charcoal mb-2">進階安全性</h3>
+              <p className="text-cool-gray">企業級加密、雙因素認證、完整審計日誌，確保客戶資料絕對安全</p>
+              <div className="mt-4 inline-block px-3 py-1 bg-subtle-gold bg-opacity-20 text-subtle-gold text-xs font-semibold rounded">
+                企業版獨享
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg border-2 border-subtle-gold hover:shadow-xl transition-shadow">
+              <div className="w-12 h-12 bg-subtle-gold rounded-lg flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-charcoal mb-2">自定義工作流</h3>
+              <p className="text-cool-gray">根據律所獨特需求，自由配置審批流程、自動化規則和業務邏輯</p>
+              <div className="mt-4 inline-block px-3 py-1 bg-subtle-gold bg-opacity-20 text-subtle-gold text-xs font-semibold rounded">
+                企業版獨享
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg border-2 border-subtle-gold hover:shadow-xl transition-shadow">
+              <div className="w-12 h-12 bg-subtle-gold rounded-lg flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-charcoal mb-2">深度分析報告</h3>
+              <p className="text-cool-gray">AI 驅動的業務洞察、績效分析和預測性報告，助力策略決策</p>
+              <div className="mt-4 inline-block px-3 py-1 bg-subtle-gold bg-opacity-20 text-subtle-gold text-xs font-semibold rounded">
+                企業版獨享
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing Preview */}
-      <section className="py-20 bg-off-white">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-teal-dark mb-4">靈活的訂閱計劃</h2>
@@ -114,7 +169,7 @@ export default function HomePage() {
           </div>
           
           <div className="grid md:grid-cols-4 gap-6">
-            <div className="bg-white p-6 rounded-lg border-2 border-light-gray">
+            <div className="bg-off-white p-6 rounded-lg border-2 border-light-gray">
               <h3 className="text-xl font-semibold text-charcoal mb-2">Starter</h3>
               <p className="text-3xl font-bold text-mint-green mb-4">HK$3,100<span className="text-sm text-cool-gray">/月</span></p>
               <p className="text-cool-gray text-sm mb-4">適合 1-2 人小型律所</p>
@@ -125,7 +180,7 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <div className="bg-white p-6 rounded-lg border-2 border-mint-green relative">
+            <div className="bg-off-white p-6 rounded-lg border-2 border-mint-green relative">
               <div className="absolute top-0 right-0 bg-mint-green text-white text-xs px-3 py-1 rounded-bl-lg rounded-tr-lg">
                 推薦
               </div>
@@ -139,7 +194,10 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <div className="bg-white p-6 rounded-lg border-2 border-light-gray">
+            <div className="bg-off-white p-6 rounded-lg border-2 border-subtle-gold relative">
+              <div className="absolute top-0 right-0 bg-subtle-gold text-charcoal text-xs px-3 py-1 rounded-bl-lg rounded-tr-lg font-semibold">
+                企業版
+              </div>
               <h3 className="text-xl font-semibold text-charcoal mb-2">Enterprise</h3>
               <p className="text-3xl font-bold text-mint-green mb-4">HK$10,100+<span className="text-sm text-cool-gray">/月</span></p>
               <p className="text-cool-gray text-sm mb-4">適合 20-100 人律所</p>
@@ -150,7 +208,7 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <div className="bg-white p-6 rounded-lg border-2 border-light-gray">
+            <div className="bg-off-white p-6 rounded-lg border-2 border-light-gray">
               <h3 className="text-xl font-semibold text-charcoal mb-2">Custom</h3>
               <p className="text-3xl font-bold text-mint-green mb-4">按需報價</p>
               <p className="text-cool-gray text-sm mb-4">適合大型律所</p>
