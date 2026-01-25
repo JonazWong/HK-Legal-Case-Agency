@@ -5,3 +5,22 @@ out
 .env.local
 .env.*.local
 prisma/dev.db
+*.db
+*.db-journal
+
+# Uploads
+uploads/
+
+# Build artifacts
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

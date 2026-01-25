@@ -1,4 +1,5 @@
 import "./globals.css";
+import { SessionProvider } from "@/components/layout/session-provider";
 
 export const metadata = {
   title: "HK Legal Case Agency",
@@ -13,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body className="min-h-full bg-off-white text-charcoal antialiased">
-        {children}
+        <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
   );
