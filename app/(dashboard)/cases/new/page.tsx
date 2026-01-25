@@ -52,9 +52,12 @@ export default function NewCasePage() {
       if (res.ok) {
         const data = await res.json();
         setClients(data.clients || []);
+      } else {
+        console.warn('Clients API not available. Client selection will be limited.');
       }
     } catch (err) {
-      console.error('Failed to fetch clients:', err);
+      console.warn('Failed to fetch clients:', err);
+      // Silently fail - form will show empty client list
     }
   };
 
@@ -64,9 +67,12 @@ export default function NewCasePage() {
       if (res.ok) {
         const data = await res.json();
         setLawyers(data.users || []);
+      } else {
+        console.warn('Users API not available. Lawyer assignment will be unavailable.');
       }
     } catch (err) {
-      console.error('Failed to fetch lawyers:', err);
+      console.warn('Failed to fetch lawyers:', err);
+      // Silently fail - form will show unassigned option only
     }
   };
 
@@ -139,8 +145,9 @@ export default function NewCasePage() {
                 value={formData.clientId}
                 onChange={handleChange}
                 required
+                helperText={clients.length === 0 ? "No clients available. Please create a client first." : undefined}
                 options={[
-                  { value: '', label: 'Select a client' },
+                  { value: '', label: clients.length === 0 ? 'No clients available' : 'Select a client' },
                   ...clients.map((client) => ({
                     value: client.id,
                     label: `${client.firstName} ${client.lastName}`,
