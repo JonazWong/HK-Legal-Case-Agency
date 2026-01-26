@@ -39,6 +39,13 @@
     ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "app/index-test-dashboard/client/**",
+    "app/index-test-dashboard/server/**",
+    "app/index-test-dashboard/shared/**",
+    "app/index-test-dashboard/patches/**",
+    "app/index-test-dashboard/*.json",
+    "app/index-test-dashboard/vite.config.ts",
+    "app/index-test-dashboard/tsconfig*.json"
   ]
 }

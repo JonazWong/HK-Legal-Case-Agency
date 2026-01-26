@@ -2,5 +2,11 @@
   "extends": "next/core-web-vitals",
   "rules": {
     "react-hooks/exhaustive-deps": "off"
-  }
+  },
+  "ignorePatterns": [
+    "app/index-test-dashboard/client/**",
+    "app/index-test-dashboard/server/**",
+    "app/index-test-dashboard/vite.config.ts",
+    "app/index-test-dashboard/tsconfig*.json"
+  ]
 }
