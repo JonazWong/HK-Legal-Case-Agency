@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -10,6 +10,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 export default function NewClientPage() {
   const router = useRouter();
+  const pathname = usePathname() || "/";
+  const isEn = pathname.startsWith("/en");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
@@ -41,7 +43,9 @@ export default function NewClientPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to create client');
+        throw new Error(
+          data.error || (isEn ? 'Failed to create client' : '建立客戶失敗')
+        );
       }
 
       router.push(`/clients/${data.id}`);
@@ -63,14 +67,16 @@ export default function NewClientPage() {
       <div className="mb-6">
         <Link href="/clients">
           <Button variant="text" size="sm">
-            ← Back to Clients
+            ← {isEn ? 'Back to Clients' : '返回客戶列表'}
           </Button>
         </Link>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Create New Client</CardTitle>
+          <CardTitle>
+            {isEn ? 'Create New Client' : '新增客戶'}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -82,7 +88,7 @@ export default function NewClientPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Input
-                label="First Name"
+                label={isEn ? 'First Name' : '名'}
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
@@ -90,7 +96,7 @@ export default function NewClientPage() {
               />
 
               <Input
-                label="Last Name"
+                label={isEn ? 'Last Name' : '姓'}
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
@@ -98,7 +104,7 @@ export default function NewClientPage() {
               />
 
               <Input
-                label="Email"
+                label={isEn ? 'Email' : '電郵'}
                 name="email"
                 type="email"
                 value={formData.email}
@@ -106,7 +112,7 @@ export default function NewClientPage() {
               />
 
               <Input
-                label="Phone"
+                label={isEn ? 'Phone' : '電話'}
                 name="phone"
                 type="tel"
                 value={formData.phone}
@@ -114,7 +120,7 @@ export default function NewClientPage() {
               />
 
               <Input
-                label="Alternate Phone"
+                label={isEn ? 'Alternate Phone' : '其他電話'}
                 name="alternatePhone"
                 type="tel"
                 value={formData.alternatePhone}
@@ -122,15 +128,23 @@ export default function NewClientPage() {
               />
 
               <Input
-                label="ID Number (HKID/Passport)"
+                label={
+                  isEn
+                    ? 'ID Number (HKID/Passport)'
+                    : '證件號碼（香港身份證／護照）'
+                }
                 name="idNumber"
                 value={formData.idNumber}
                 onChange={handleChange}
-                helperText="Hong Kong ID or Passport number"
+                helperText={
+                  isEn
+                    ? 'Hong Kong ID or Passport number'
+                    : '例如：香港身份證號碼或護照號碼'
+                }
               />
 
               <Input
-                label="Date of Birth"
+                label={isEn ? 'Date of Birth' : '出生日期'}
                 name="dateOfBirth"
                 type="date"
                 value={formData.dateOfBirth}
@@ -138,14 +152,14 @@ export default function NewClientPage() {
               />
 
               <Input
-                label="Occupation"
+                label={isEn ? 'Occupation' : '職業'}
                 name="occupation"
                 value={formData.occupation}
                 onChange={handleChange}
               />
 
               <Input
-                label="Company"
+                label={isEn ? 'Company' : '公司'}
                 name="company"
                 value={formData.company}
                 onChange={handleChange}
@@ -153,7 +167,7 @@ export default function NewClientPage() {
             </div>
 
             <Textarea
-              label="Address"
+              label={isEn ? 'Address' : '地址'}
               name="address"
               value={formData.address}
               onChange={handleChange}
@@ -161,22 +175,26 @@ export default function NewClientPage() {
             />
 
             <Textarea
-              label="Notes"
+              label={isEn ? 'Notes' : '內部備註'}
               name="notes"
               value={formData.notes}
               onChange={handleChange}
               rows={4}
-              helperText="Internal notes about the client"
+              helperText={
+                isEn
+                  ? 'Internal notes about the client'
+                  : '只供內部參考的備註，不會顯示給客戶'
+              }
             />
 
             <div className="flex gap-4 justify-end">
               <Link href="/clients">
                 <Button type="button" variant="secondary">
-                  Cancel
+                  {isEn ? 'Cancel' : '取消'}
                 </Button>
               </Link>
               <Button type="submit" loading={loading}>
-                Create Client
+                {isEn ? 'Create Client' : '建立客戶'}
               </Button>
             </div>
           </form>

@@ -18,31 +18,46 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableHeader,
+  'use client';
   TableRow,
-} from '@/components/ui/table';
+  import { useState, useEffect } from 'react';
 
 interface Case {
+  import { usePathname } from 'next/navigation';
   id: string;
   caseNumber: string;
   title: string;
   category: string;
   status: string;
   filingDate: string | null;
+    const pathname = usePathname() || "/";
+    const isEn = pathname.startsWith("/en");
   createdAt: string;
 }
-
+          throw new Error(
+            data.error || (isEn ? 'Failed to fetch client' : '載入客戶資料失敗')
+          );
 interface ClientData {
   id: string;
   firstName: string;
-  lastName: string;
+      if (
+        !confirm(
+          isEn
+            ? 'Are you sure you want to delete this client? This action cannot be undone.'
+            : '確定要刪除這位客戶嗎？此操作無法還原。'
+        )
+      ) {
   email: string | null;
   phone: string | null;
   alternatePhone: string | null;
   address: string | null;
   idNumber: string | null;
   dateOfBirth: string | null;
-  occupation: string | null;
+          throw new Error(
+            data.message ||
+              data.error ||
+              (isEn ? 'Failed to delete client' : '刪除客戶失敗')
+          );
   company: string | null;
   notes: string | null;
   createdAt: string;
@@ -50,28 +65,30 @@ interface ClientData {
   cases: Case[];
   _count: {
     cases: number;
-  };
+                ← {isEn ? 'Back to Clients' : '返回客戶列表'}
 }
 
 export default function ClientViewPage() {
   const router = useRouter();
-  const params = useParams();
+            {error || (isEn ? 'Client not found' : '找不到相關客戶')}
   const id = params?.id as string;
   const [client, setClient] = useState<ClientData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleteLoading, setDeleteLoading] = useState(false);
-
+              ← {isEn ? 'Back to Clients' : '返回客戶列表'}
   useEffect(() => {
     if (id) {
       fetchClient();
     }
-  }, [id]);
+              {isEn ? 'Client ID' : '客戶編號'}: {client.id}
 
   const fetchClient = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/clients/${id}`);
+              <Button variant="secondary">
+                {isEn ? 'Edit Client' : '編輯客戶'}
+              </Button>
       const data = await res.json();
 
       if (!res.ok) {
@@ -80,54 +97,88 @@ export default function ClientViewPage() {
 
       setClient(data);
     } catch (err: any) {
-      setError(err.message);
+              {isEn ? 'Delete' : '刪除'}
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async () => {
+              <CardTitle>
+                {isEn ? 'Contact Information' : '聯絡資料'}
+              </CardTitle>
     if (!confirm('Are you sure you want to delete this client? This action cannot be undone.')) {
       return;
     }
-
-    try {
+                <p className="text-sm text-cool-gray">
+                  {isEn ? 'Email' : '電郵'}
+                </p>
+                <p className="font-medium">
+                  {client.email || (isEn ? 'N/A' : '—')}
+                </p>
       setDeleteLoading(true);
       const res = await fetch(`/api/clients/${id}`, {
-        method: 'DELETE',
-      });
+                <p className="text-sm text-cool-gray">
+                  {isEn ? 'Phone' : '電話'}
+                </p>
+                <p className="font-medium">
+                  {client.phone || (isEn ? 'N/A' : '—')}
+                </p>
 
       const data = await res.json();
-
-      if (!res.ok) {
+                <p className="text-sm text-cool-gray">
+                  {isEn ? 'Alternate Phone' : '其他電話'}
+                </p>
+                <p className="font-medium">
+                  {client.alternatePhone || (isEn ? 'N/A' : '—')}
+                </p>
         throw new Error(data.message || data.error || 'Failed to delete client');
       }
-
-      router.push('/clients');
+                <p className="text-sm text-cool-gray">
+                  {isEn ? 'Address' : '地址'}
+                </p>
+                <p className="font-medium whitespace-pre-wrap">
+                  {client.address || (isEn ? 'N/A' : '—')}
+                </p>
     } catch (err: any) {
       alert(err.message);
       setDeleteLoading(false);
     }
   };
 
-  const getStatusBadgeVariant = (status: string) => {
+              <CardTitle>
+                {isEn ? 'Personal Information' : '個人資料'}
+              </CardTitle>
     switch (status) {
       case 'ACTIVE':
         return 'success';
-      case 'PENDING':
-        return 'warning';
+                <p className="text-sm text-cool-gray">
+                  {isEn ? 'ID Number' : '證件號碼'}
+                </p>
+                <p className="font-medium">
+                  {client.idNumber || (isEn ? 'N/A' : '—')}
+                </p>
       case 'COMPLETED':
         return 'info';
-      case 'ARCHIVED':
+                <p className="text-sm text-cool-gray">
+                  {isEn ? 'Date of Birth' : '出生日期'}
+                </p>
         return 'default';
       default:
         return 'default';
-    }
-  };
+                <p className="text-sm text-cool-gray">
+                  {isEn ? 'Occupation' : '職業'}
+                </p>
+                <p className="font-medium">
+                  {client.occupation || (isEn ? 'N/A' : '—')}
+                </p>
 
   if (loading) {
-    return (
-      <div className="flex justify-center py-12">
+                <p className="text-sm text-cool-gray">
+                  {isEn ? 'Company' : '公司'}
+                </p>
+                <p className="font-medium">
+                  {client.company || (isEn ? 'N/A' : '—')}
+                </p>
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mint-green"></div>
       </div>
     );
@@ -136,7 +187,7 @@ export default function ClientViewPage() {
   if (error || !client) {
     return (
       <div className="max-w-4xl mx-auto">
-        <div className="mb-6">
+              <CardTitle>{isEn ? 'Notes' : '內部備註'}</CardTitle>
           <Link href="/clients">
             <Button variant="text" size="sm">
               ← Back to Clients
@@ -148,29 +199,37 @@ export default function ClientViewPage() {
         </div>
       </div>
     );
-  }
-
+                <CardTitle>
+                  {isEn ? 'Cases' : '相關案件'} ({client._count.cases})
+                </CardTitle>
+                <CardDescription>
+                  {isEn
+                    ? 'All cases associated with this client'
+                    : '此客戶相關的所有案件'}
+                </CardDescription>
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      <div className="mb-6">
+                <Button size="sm">
+                  {isEn ? 'Create New Case' : '為此客戶新增案件'}
+                </Button>
         <Link href="/clients">
           <Button variant="text" size="sm">
             ← Back to Clients
           </Button>
         </Link>
       </div>
-
+                {isEn ? 'No cases found for this client' : '此客戶暫時沒有案件'}
       <div className="flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-bold text-charcoal">
             {formatFullName(client.lastName, client.firstName)}
           </h1>
-          <p className="text-cool-gray mt-1">
-            Client ID: {client.id}
-          </p>
-        </div>
-        <div className="flex gap-3">
-          <Link href={`/clients/${id}/edit`}>
+                    <TableHead>{isEn ? 'Case Number' : '案件編號'}</TableHead>
+                    <TableHead>{isEn ? 'Title' : '案件標題'}</TableHead>
+                    <TableHead>{isEn ? 'Category' : '類別'}</TableHead>
+                    <TableHead>{isEn ? 'Status' : '狀態'}</TableHead>
+                    <TableHead>{isEn ? 'Filing Date' : '立案日期'}</TableHead>
+                    <TableHead>{isEn ? 'Actions' : '操作'}</TableHead>
             <Button variant="secondary">Edit Client</Button>
           </Link>
           <Button
@@ -183,14 +242,24 @@ export default function ClientViewPage() {
           </Button>
         </div>
       </div>
-
+                          {isEn
+                            ? caseItem.status
+                            : caseItem.status === 'ACTIVE'
+                            ? '進行中'
+                            : caseItem.status === 'PENDING'
+                            ? '待處理'
+                            : caseItem.status === 'COMPLETED'
+                            ? '已完成'
+                            : caseItem.status === 'ARCHIVED'
+                            ? '已封存'
+                            : caseItem.status}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
             <CardTitle>Contact Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div>
+                            {isEn ? 'View' : '查看'}
               <p className="text-sm text-cool-gray">Email</p>
               <p className="font-medium">{client.email || 'N/A'}</p>
             </div>
@@ -204,15 +273,19 @@ export default function ClientViewPage() {
             </div>
             <div>
               <p className="text-sm text-cool-gray">Address</p>
-              <p className="font-medium whitespace-pre-wrap">{client.address || 'N/A'}</p>
+            <CardTitle>{isEn ? 'Metadata' : '建立與更新紀錄'}</CardTitle>
             </div>
           </CardContent>
         </Card>
-
+              <p className="text-sm text-cool-gray">
+                {isEn ? 'Created' : '建立時間'}
+              </p>
         <Card>
           <CardHeader>
             <CardTitle>Personal Information</CardTitle>
-          </CardHeader>
+              <p className="text-sm text-cool-gray">
+                {isEn ? 'Last Updated' : '最後更新'}
+              </p>
           <CardContent className="space-y-3">
             <div>
               <p className="text-sm text-cool-gray">ID Number</p>

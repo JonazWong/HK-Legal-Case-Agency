@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useState, useEffect, useCallback } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
@@ -35,6 +35,8 @@ interface Case {
 
 export default function CasesPage() {
   const router = useRouter();
+  const pathname = usePathname() || "/";
+  const isEn = pathname.startsWith("/en");
   const [cases, setCases] = useState<Case[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -95,8 +97,8 @@ export default function CasesPage() {
   };
 
   const formatDate = (dateString: string | null) => {
-    if (!dateString) return 'N/A';
-    return new Date(dateString).toLocaleDateString('en-GB');
+    if (!dateString) return isEn ? "N/A" : "—";
+    return new Date(dateString).toLocaleDateString("en-GB");
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -109,11 +111,15 @@ export default function CasesPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-charcoal">Cases</h1>
-          <p className="text-cool-gray mt-1">Manage all your legal cases</p>
+          <h1 className="text-3xl font-bold text-charcoal">
+            {isEn ? "Cases" : "案件列表"}
+          </h1>
+          <p className="text-cool-gray mt-1">
+            {isEn ? "Manage all your legal cases" : "管理事務所內所有法律案件"}
+          </p>
         </div>
         <Link href="/cases/new">
-          <Button>Create New Case</Button>
+          <Button>{isEn ? "Create New Case" : "新增案件"}</Button>
         </Link>
       </div>
 
@@ -122,18 +128,22 @@ export default function CasesPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2">
               <Input
-                placeholder="Search by case number, title, or court reference..."
+                placeholder={
+                  isEn
+                    ? "Search by case number, title, or court reference..."
+                    : "可輸入案件編號、標題或法院檔案編號搜尋…"
+                }
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
             <Select
               options={[
-                { value: '', label: 'All Statuses' },
-                { value: 'ACTIVE', label: 'Active' },
-                { value: 'PENDING', label: 'Pending' },
-                { value: 'COMPLETED', label: 'Completed' },
-                { value: 'ARCHIVED', label: 'Archived' },
+                { value: "", label: isEn ? "All Statuses" : "全部狀態" },
+                { value: "ACTIVE", label: isEn ? "Active" : "進行中" },
+                { value: "PENDING", label: isEn ? "Pending" : "待處理" },
+                { value: "COMPLETED", label: isEn ? "Completed" : "已完成" },
+                { value: "ARCHIVED", label: isEn ? "Archived" : "已封存" },
               ]}
               value={statusFilter}
               onChange={(e) => {
@@ -156,21 +166,23 @@ export default function CasesPage() {
           </div>
         ) : cases.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-cool-gray">No cases found</p>
+            <p className="text-cool-gray">
+              {isEn ? "No cases found" : "未找到任何案件"}
+            </p>
           </div>
         ) : (
           <>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Case Number</TableHead>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Client</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Filing Date</TableHead>
-                  <TableHead>Assigned Lawyer</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead>{isEn ? "Case Number" : "案件編號"}</TableHead>
+                  <TableHead>{isEn ? "Title" : "案件標題"}</TableHead>
+                  <TableHead>{isEn ? "Client" : "客戶"}</TableHead>
+                  <TableHead>{isEn ? "Category" : "類別"}</TableHead>
+                  <TableHead>{isEn ? "Status" : "狀態"}</TableHead>
+                  <TableHead>{isEn ? "Filing Date" : "立案日期"}</TableHead>
+                  <TableHead>{isEn ? "Assigned Lawyer" : "負責律師"}</TableHead>
+                  <TableHead>{isEn ? "Actions" : "操作"}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -186,7 +198,17 @@ export default function CasesPage() {
                     <TableCell>{caseItem.category}</TableCell>
                     <TableCell>
                       <Badge variant={getStatusBadgeVariant(caseItem.status)}>
-                        {caseItem.status}
+                        {isEn
+                          ? caseItem.status
+                          : caseItem.status === "ACTIVE"
+                          ? "進行中"
+                          : caseItem.status === "PENDING"
+                          ? "待處理"
+                          : caseItem.status === "COMPLETED"
+                          ? "已完成"
+                          : caseItem.status === "ARCHIVED"
+                          ? "已封存"
+                          : caseItem.status}
                       </Badge>
                     </TableCell>
                     <TableCell>{formatDate(caseItem.filingDate)}</TableCell>
@@ -197,12 +219,12 @@ export default function CasesPage() {
                       <div className="flex gap-2">
                         <Link href={`/cases/${caseItem.id}`}>
                           <Button size="sm" variant="text">
-                            View
+                            {isEn ? "View" : "查看"}
                           </Button>
                         </Link>
                         <Link href={`/cases/${caseItem.id}/edit`}>
                           <Button size="sm" variant="text">
-                            Edit
+                            {isEn ? "Edit" : "編輯"}
                           </Button>
                         </Link>
                       </div>
@@ -220,10 +242,11 @@ export default function CasesPage() {
                   disabled={page === 1}
                   onClick={() => setPage(page - 1)}
                 >
-                  Previous
+                  {isEn ? "Previous" : "上一頁"}
                 </Button>
                 <span className="px-4 py-2 text-sm text-cool-gray">
-                  Page {page} of {totalPages}
+                  {isEn ? "Page" : "第"} {page}{" "}
+                  {isEn ? "of" : "頁，共"} {totalPages}{isEn ? "" : "頁"}
                 </span>
                 <Button
                   size="sm"
@@ -231,7 +254,7 @@ export default function CasesPage() {
                   disabled={page === totalPages}
                   onClick={() => setPage(page + 1)}
                 >
-                  Next
+                  {isEn ? "Next" : "下一頁"}
                 </Button>
               </div>
             )}

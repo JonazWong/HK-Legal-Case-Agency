@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import { useRouter, useParams, usePathname } from "next/navigation";
+import Link from "next/link";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -28,6 +28,8 @@ export default function EditClientPage() {
   const router = useRouter();
   const params = useParams();
   const id = params?.id as string;
+  const pathname = usePathname() || "/";
+  const isEn = pathname.startsWith("/en");
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [error, setError] = useState('');
@@ -58,7 +60,9 @@ export default function EditClientPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to fetch client');
+        throw new Error(
+          data.error || (isEn ? 'Failed to fetch client' : '載入客戶資料失敗')
+        );
       }
 
       setFormData({
@@ -96,7 +100,9 @@ export default function EditClientPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to update client');
+        throw new Error(
+          data.error || (isEn ? 'Failed to update client' : '更新客戶失敗')
+        );
       }
 
       router.push(`/clients/${id}`);
@@ -126,14 +132,14 @@ export default function EditClientPage() {
       <div className="mb-6">
         <Link href={`/clients/${id}`}>
           <Button variant="text" size="sm">
-            ← Back to Client
+            ← {isEn ? 'Back to Client' : '返回客戶詳情'}
           </Button>
         </Link>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Edit Client</CardTitle>
+          <CardTitle>{isEn ? 'Edit Client' : '編輯客戶'}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -145,7 +151,7 @@ export default function EditClientPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Input
-                label="First Name"
+                label={isEn ? 'First Name' : '名'}
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
@@ -153,7 +159,7 @@ export default function EditClientPage() {
               />
 
               <Input
-                label="Last Name"
+                label={isEn ? 'Last Name' : '姓'}
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
@@ -161,7 +167,7 @@ export default function EditClientPage() {
               />
 
               <Input
-                label="Email"
+                label={isEn ? 'Email' : '電郵'}
                 name="email"
                 type="email"
                 value={formData.email}
@@ -169,7 +175,7 @@ export default function EditClientPage() {
               />
 
               <Input
-                label="Phone"
+                label={isEn ? 'Phone' : '電話'}
                 name="phone"
                 type="tel"
                 value={formData.phone}
@@ -177,7 +183,7 @@ export default function EditClientPage() {
               />
 
               <Input
-                label="Alternate Phone"
+                label={isEn ? 'Alternate Phone' : '其他電話'}
                 name="alternatePhone"
                 type="tel"
                 value={formData.alternatePhone}
@@ -185,15 +191,23 @@ export default function EditClientPage() {
               />
 
               <Input
-                label="ID Number (HKID/Passport)"
+                label={
+                  isEn
+                    ? 'ID Number (HKID/Passport)'
+                    : '證件號碼（香港身份證／護照）'
+                }
                 name="idNumber"
                 value={formData.idNumber}
                 onChange={handleChange}
-                helperText="Hong Kong ID or Passport number"
+                helperText={
+                  isEn
+                    ? 'Hong Kong ID or Passport number'
+                    : '例如：香港身份證號碼或護照號碼'
+                }
               />
 
               <Input
-                label="Date of Birth"
+                label={isEn ? 'Date of Birth' : '出生日期'}
                 name="dateOfBirth"
                 type="date"
                 value={formData.dateOfBirth}
@@ -201,14 +215,14 @@ export default function EditClientPage() {
               />
 
               <Input
-                label="Occupation"
+                label={isEn ? 'Occupation' : '職業'}
                 name="occupation"
                 value={formData.occupation}
                 onChange={handleChange}
               />
 
               <Input
-                label="Company"
+                label={isEn ? 'Company' : '公司'}
                 name="company"
                 value={formData.company}
                 onChange={handleChange}
@@ -216,7 +230,7 @@ export default function EditClientPage() {
             </div>
 
             <Textarea
-              label="Address"
+              label={isEn ? 'Address' : '地址'}
               name="address"
               value={formData.address}
               onChange={handleChange}
@@ -224,22 +238,26 @@ export default function EditClientPage() {
             />
 
             <Textarea
-              label="Notes"
+              label={isEn ? 'Notes' : '內部備註'}
               name="notes"
               value={formData.notes}
               onChange={handleChange}
               rows={4}
-              helperText="Internal notes about the client"
+              helperText={
+                isEn
+                  ? 'Internal notes about the client'
+                  : '只供內部參考的備註，不會顯示給客戶'
+              }
             />
 
             <div className="flex gap-4 justify-end">
               <Link href={`/clients/${id}`}>
                 <Button type="button" variant="secondary">
-                  Cancel
+                  {isEn ? 'Cancel' : '取消'}
                 </Button>
               </Link>
               <Button type="submit" loading={loading}>
-                Update Client
+                {isEn ? 'Update Client' : '更新客戶'}
               </Button>
             </div>
           </form>

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import { useRouter, useParams, usePathname } from "next/navigation";
+import Link from "next/link";
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -60,6 +60,8 @@ export default function CaseViewPage() {
   const router = useRouter();
   const params = useParams();
   const id = params?.id as string;
+  const pathname = usePathname() || "/";
+  const isEn = pathname.startsWith("/en");
   const [caseData, setCaseData] = useState<CaseData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -90,7 +92,13 @@ export default function CaseViewPage() {
   };
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this case? This action cannot be undone.')) {
+    if (
+      !confirm(
+        isEn
+          ? "Are you sure you want to delete this case? This action cannot be undone."
+          : "確定要刪除這宗案件嗎？此操作無法還原。"
+      )
+    ) {
       return;
     }
 
@@ -102,7 +110,9 @@ export default function CaseViewPage() {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || 'Failed to delete case');
+        throw new Error(
+          data.error || (isEn ? 'Failed to delete case' : '刪除案件失敗')
+        );
       }
 
       router.push('/cases');
@@ -128,13 +138,17 @@ export default function CaseViewPage() {
   };
 
   const formatDate = (dateString: string | null) => {
-    if (!dateString) return 'N/A';
-    return new Date(dateString).toLocaleDateString('en-GB');
+    if (!dateString) return isEn ? "N/A" : "—";
+    return new Date(dateString).toLocaleDateString("en-GB");
   };
 
   const formatCurrency = (amount: number | null) => {
-    if (amount === null) return 'N/A';
-    return `HKD ${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    if (amount === null) return isEn ? "N/A" : "—";
+    const prefix = isEn ? "HKD " : "港幣 ";
+    return `${prefix}${amount.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
   };
 
   if (loading) {
@@ -150,10 +164,12 @@ export default function CaseViewPage() {
       <div className="max-w-4xl mx-auto">
         <Card>
           <CardContent className="py-12 text-center">
-            <p className="text-alert-red">{error || 'Case not found'}</p>
+            <p className="text-alert-red">
+              {error || (isEn ? 'Case not found' : '找不到相關案件')}
+            </p>
             <Link href="/cases">
               <Button variant="secondary" className="mt-4">
-                Back to Cases
+                {isEn ? 'Back to Cases' : '返回案件列表'}
               </Button>
             </Link>
           </CardContent>
@@ -168,7 +184,7 @@ export default function CaseViewPage() {
         <div>
           <Link href="/cases">
             <Button variant="text" size="sm">
-              ← Back to Cases
+              ← {isEn ? 'Back to Cases' : '返回案件列表'}
             </Button>
           </Link>
           <h1 className="text-3xl font-bold text-charcoal mt-2">
@@ -178,10 +194,16 @@ export default function CaseViewPage() {
         </div>
         <div className="flex gap-2">
           <Link href={`/cases/${id}/edit`}>
-            <Button variant="secondary">Edit Case</Button>
+            <Button variant="secondary">
+              {isEn ? 'Edit Case' : '編輯案件'}
+            </Button>
           </Link>
-          <Button variant="danger" onClick={handleDelete} loading={deleteLoading}>
-            Delete
+          <Button
+            variant="danger"
+            onClick={handleDelete}
+            loading={deleteLoading}
+          >
+            {isEn ? 'Delete' : '刪除'}
           </Button>
         </div>
       </div>
@@ -189,60 +211,94 @@ export default function CaseViewPage() {
       <Card>
         <CardHeader>
           <div className="flex justify-between items-center">
-            <CardTitle>Case Information</CardTitle>
+            <CardTitle>
+              {isEn ? 'Case Information' : '案件資料'}
+            </CardTitle>
             <Badge variant={getStatusBadgeVariant(caseData.status)}>
-              {caseData.status}
+              {isEn
+                ? caseData.status
+                : caseData.status === 'ACTIVE'
+                ? '進行中'
+                : caseData.status === 'PENDING'
+                ? '待處理'
+                : caseData.status === 'COMPLETED'
+                ? '已完成'
+                : caseData.status === 'ARCHIVED'
+                ? '已封存'
+                : caseData.status}
             </Badge>
           </div>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="text-sm font-medium text-cool-gray">Case Number</label>
+              <label className="text-sm font-medium text-cool-gray">
+                {isEn ? 'Case Number' : '案件編號'}
+              </label>
               <p className="text-charcoal mt-1">{caseData.caseNumber}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-cool-gray">Category</label>
+              <label className="text-sm font-medium text-cool-gray">
+                {isEn ? 'Category' : '案件類別'}
+              </label>
               <p className="text-charcoal mt-1">{caseData.category}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-cool-gray">Filing Date</label>
+              <label className="text-sm font-medium text-cool-gray">
+                {isEn ? 'Filing Date' : '立案日期'}
+              </label>
               <p className="text-charcoal mt-1">{formatDate(caseData.filingDate)}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-cool-gray">Closing Date</label>
+              <label className="text-sm font-medium text-cool-gray">
+                {isEn ? 'Closing Date' : '結案日期'}
+              </label>
               <p className="text-charcoal mt-1">{formatDate(caseData.closingDate)}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-cool-gray">Court Reference</label>
-              <p className="text-charcoal mt-1">{caseData.courtReference || 'N/A'}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-cool-gray">Assigned Lawyer</label>
+              <label className="text-sm font-medium text-cool-gray">
+                {isEn ? 'Court Reference' : '法院檔案編號'}
+              </label>
               <p className="text-charcoal mt-1">
-                {caseData.assignedLawyer?.name || 'Unassigned'}
+                {caseData.courtReference || (isEn ? 'N/A' : '—')}
               </p>
             </div>
             <div>
-              <label className="text-sm font-medium text-cool-gray">Estimated Budget</label>
+              <label className="text-sm font-medium text-cool-gray">
+                {isEn ? 'Assigned Lawyer' : '負責律師'}
+              </label>
+              <p className="text-charcoal mt-1">
+                {caseData.assignedLawyer?.name || (isEn ? 'Unassigned' : '未指派')}
+              </p>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-cool-gray">
+                {isEn ? 'Estimated Budget' : '預計費用'}
+              </label>
               <p className="text-charcoal mt-1">{formatCurrency(caseData.estimatedBudget)}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-cool-gray">Actual Cost</label>
+              <label className="text-sm font-medium text-cool-gray">
+                {isEn ? 'Actual Cost' : '實際費用'}
+              </label>
               <p className="text-charcoal mt-1">{formatCurrency(caseData.actualCost)}</p>
             </div>
           </div>
 
           {caseData.description && (
             <div className="mt-6">
-              <label className="text-sm font-medium text-cool-gray">Description</label>
+              <label className="text-sm font-medium text-cool-gray">
+                {isEn ? 'Description' : '案件描述'}
+              </label>
               <p className="text-charcoal mt-1 whitespace-pre-wrap">{caseData.description}</p>
             </div>
           )}
 
           {caseData.notes && (
             <div className="mt-6">
-              <label className="text-sm font-medium text-cool-gray">Notes</label>
+              <label className="text-sm font-medium text-cool-gray">
+                {isEn ? 'Notes' : '內部備註'}
+              </label>
               <p className="text-charcoal mt-1 whitespace-pre-wrap">{caseData.notes}</p>
             </div>
           )}
@@ -251,23 +307,35 @@ export default function CaseViewPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Client Information</CardTitle>
+          <CardTitle>
+            {isEn ? 'Client Information' : '客戶資料'}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="text-sm font-medium text-cool-gray">Name</label>
+              <label className="text-sm font-medium text-cool-gray">
+                {isEn ? 'Name' : '姓名'}
+              </label>
               <p className="text-charcoal mt-1">
                 {caseData.client.firstName} {caseData.client.lastName}
               </p>
             </div>
             <div>
-              <label className="text-sm font-medium text-cool-gray">Email</label>
-              <p className="text-charcoal mt-1">{caseData.client.email || 'N/A'}</p>
+              <label className="text-sm font-medium text-cool-gray">
+                {isEn ? 'Email' : '電郵'}
+              </label>
+              <p className="text-charcoal mt-1">
+                {caseData.client.email || (isEn ? 'N/A' : '—')}
+              </p>
             </div>
             <div>
-              <label className="text-sm font-medium text-cool-gray">Phone</label>
-              <p className="text-charcoal mt-1">{caseData.client.phone || 'N/A'}</p>
+              <label className="text-sm font-medium text-cool-gray">
+                {isEn ? 'Phone' : '電話'}
+              </label>
+              <p className="text-charcoal mt-1">
+                {caseData.client.phone || (isEn ? 'N/A' : '—')}
+              </p>
             </div>
           </div>
         </CardContent>
@@ -275,12 +343,20 @@ export default function CaseViewPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Recent Time Entries</CardTitle>
-          <CardDescription>Last 5 time entries for this case</CardDescription>
+          <CardTitle>
+            {isEn ? 'Recent Time Entries' : '最近工時記錄'}
+          </CardTitle>
+          <CardDescription>
+            {isEn
+              ? 'Last 5 time entries for this case'
+              : '此案件最近的 5 筆工時記錄'}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {caseData.timeEntries.length === 0 ? (
-            <p className="text-cool-gray text-center py-4">No time entries yet</p>
+            <p className="text-cool-gray text-center py-4">
+              {isEn ? 'No time entries yet' : '暫時沒有工時記錄'}
+            </p>
           ) : (
             <div className="space-y-3">
               {caseData.timeEntries.map((entry) => (
@@ -291,7 +367,8 @@ export default function CaseViewPage() {
                   <div>
                     <p className="text-charcoal font-medium">{entry.description}</p>
                     <p className="text-sm text-cool-gray">
-                      {formatDate(entry.date)} • {entry.hours} hours
+                      {formatDate(entry.date)} • {entry.hours}{' '}
+                      {isEn ? 'hours' : '小時'}
                     </p>
                   </div>
                   <p className="text-charcoal font-medium">
@@ -306,12 +383,20 @@ export default function CaseViewPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Recent Documents</CardTitle>
-          <CardDescription>Last 5 documents for this case</CardDescription>
+          <CardTitle>
+            {isEn ? 'Recent Documents' : '最近文件'}
+          </CardTitle>
+          <CardDescription>
+            {isEn
+              ? 'Last 5 documents for this case'
+              : '此案件最近的 5 份文件'}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {caseData.documents.length === 0 ? (
-            <p className="text-cool-gray text-center py-4">No documents yet</p>
+            <p className="text-cool-gray text-center py-4">
+              {isEn ? 'No documents yet' : '暫時沒有文件'}
+            </p>
           ) : (
             <div className="space-y-3">
               {caseData.documents.map((doc) => (

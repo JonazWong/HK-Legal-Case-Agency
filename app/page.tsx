@@ -1,58 +1,57 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function HomePage() {
+  const pathname = usePathname() || "/";
+  const isEn = pathname.startsWith("/en");
+  const localePrefix = isEn ? "/en" : "/zh";
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Hero Section with Background Image */}
-      <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/images/hero-background.jpg"
-            alt="Professional legal background"
-            className="w-full h-full object-cover"
-          />
-          {/* Dark Overlay for Text Readability */}
-          <div className="absolute inset-0 bg-black/60" />
-        </div>
-
-        {/* Geometric Pattern Accent */}
-        <div className="absolute top-0 right-0 w-96 h-96 opacity-10 z-0">
-          <img
-            src="/images/geometric-pattern.png"
-            alt="Geometric pattern"
-            className="w-full h-full object-cover"
-          />
-        </div>
+      <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-black">
+        {/* Background Video with Dark Overlay */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/media/5636967-uhd_3840_2160_24fps.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/60" />
 
         {/* Content */}
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 text-center">
-          <div className="space-y-6">
-            <h1 className="text-display text-white">
-              香港法律業務案件管理平台
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="space-y-4 sm:space-y-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
+              {isEn ? "Hong Kong Legal Intelligence Platform" : "法律事務智能資料庫"}
             </h1>
-            <p className="text-xl md:text-2xl text-accent font-semibold">
-              Hong Kong Legal Case Management Platform
-            </p>
-            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              為香港法律專業人士打造的全方位案件管理系統，提升效率、優化流程、專業可靠
+            <h2 className="text-lg sm:text-xl md:text-2xl text-accent font-semibold">
+              {isEn ? "AI-powered Search & Analysis" : "AI 集成搜尋分析"}
+            </h2>
+            <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+              {isEn
+                ? "An integrated case and knowledge management platform for Hong Kong legal professionals, combining AI search with modern case workflows."
+                : "為香港法律專業人士打造的全方位案件與知識管理平台，整合智能搜尋與案件管理，提升效率、優化流程、專業可靠。"}
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4 sm:pt-8">
               <Link
-                href="/signup"
-                className="min-w-[240px] inline-flex items-center justify-center rounded-full bg-primary hover:bg-blue-800 text-white font-semibold text-lg py-6 px-6"
+                href={`${localePrefix}/signup`}
+                className="min-w-[220px] inline-flex items-center justify-center rounded-full bg-primary hover:bg-blue-800 text-white font-semibold text-base sm:text-lg py-4 sm:py-5 px-6"
               >
-                開始 14 天免費試用
+                {isEn ? "Start 14-day Free Trial" : "14天免費試用"}
               </Link>
               <Link
-                href="/login"
-                className="min-w-[240px] inline-flex items-center justify-center rounded-full border-2 border-accent text-accent hover:bg-accent/10 font-semibold text-lg py-6 px-6"
+                href={`${localePrefix}/login`}
+                className="min-w-[220px] inline-flex items-center justify-center rounded-full border-2 border-accent text-accent hover:bg-accent/10 font-semibold text-base sm:text-lg py-4 sm:py-5 px-6"
               >
-                登入
+                {isEn ? "Log in to Smart Search" : "登入智能搜尋器"}
               </Link>
             </div>
           </div>
@@ -81,10 +80,12 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              核心功能
+              {isEn ? "Core Features" : "核心功能"}
             </h2>
             <p className="text-lg text-muted-foreground">
-              專為香港法律市場設計的完整解決方案
+              {isEn
+                ? "A complete solution designed for the Hong Kong legal market."
+                : "專為香港法律市場設計的完整解決方案"}
             </p>
           </div>
 
@@ -106,9 +107,13 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">案件管理</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {isEn ? "Case Management" : "案件管理"}
+              </h3>
               <p className="text-muted-foreground">
-                全面追蹤案件進度、狀態、預算及重要日期，確保每個案件都在掌控之中
+                {isEn
+                  ? "Track case progress, status, budgets and key dates in one place."
+                  : "全面追蹤案件進度、狀態、預算及重要日期，確保每個案件都在掌控之中"}
               </p>
             </div>
 
@@ -129,9 +134,13 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">客戶管理</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {isEn ? "Client Management" : "客戶管理"}
+              </h3>
               <p className="text-muted-foreground">
-                集中管理客戶資料、通訊記錄及案件歷史，提升客戶服務質量
+                {isEn
+                  ? "Centralise client information, communications and case history."
+                  : "集中管理客戶資料、通訊記錄及案件歷史，提升客戶服務質量"}
               </p>
             </div>
 
@@ -152,9 +161,13 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">時間追蹤</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {isEn ? "Time Tracking" : "時間追蹤"}
+              </h3>
               <p className="text-muted-foreground">
-                準確記錄工作時數，自動計算費用並生成專業發票
+                {isEn
+                  ? "Accurately record billable hours and generate professional invoices."
+                  : "準確記錄工作時數，自動計算費用並生成專業發票"}
               </p>
             </div>
 
@@ -175,9 +188,13 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">文檔管理</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {isEn ? "Document Management" : "文檔管理"}
+              </h3>
               <p className="text-muted-foreground">
-                安全存儲和管理案件文檔，支持版本控制及電子簽名
+                {isEn
+                  ? "Securely store and manage documents with versioning and e-signatures."
+                  : "安全存儲和管理案件文檔，支持版本控制及電子簽名"}
               </p>
             </div>
 
@@ -198,9 +215,13 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">發票管理</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {isEn ? "Invoice Management" : "發票管理"}
+              </h3>
               <p className="text-muted-foreground">
-                自動化發票生成、追蹤付款狀態，簡化財務管理流程
+                {isEn
+                  ? "Automate invoice creation and payment tracking for smoother billing."
+                  : "自動化發票生成、追蹤付款狀態，簡化財務管理流程"}
               </p>
             </div>
 
@@ -221,9 +242,13 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">通訊平台</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {isEn ? "Communication Hub" : "通訊平台"}
+              </h3>
               <p className="text-muted-foreground">
-                整合電郵、短訊及應用內訊息，確保溝通順暢無阻
+                {isEn
+                  ? "Unify email, SMS and in-app messaging for seamless communication."
+                  : "整合電郵、短訊及應用內訊息，確保溝通順暢無阻"}
               </p>
             </div>
           </div>
@@ -235,13 +260,15 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="inline-block px-4 py-2 bg-accent/20 text-accent text-sm font-semibold rounded-full mb-4">
-              企業版專享
+              {isEn ? "Enterprise Only" : "企業版專享"}
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              高級功能
+              {isEn ? "Advanced Features" : "高級功能"}
             </h2>
             <p className="text-lg text-muted-foreground">
-              為專業律所提供更強大的管理工具
+              {isEn
+                ? "Powerful tools tailored for professional law firms."
+                : "為專業律所提供更強大的管理工具"}
             </p>
           </div>
 
@@ -263,12 +290,16 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">進階安全性</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {isEn ? "Advanced Security" : "進階安全性"}
+              </h3>
               <p className="text-muted-foreground mb-4">
-                企業級加密、雙因素認證、完整審計日誌，確保客戶資料絕對安全
+                {isEn
+                  ? "Enterprise-grade encryption, MFA and full audit logs to secure client data."
+                  : "企業級加密、雙因素認證、完整審計日誌，確保客戶資料絕對安全"}
               </p>
               <div className="inline-block px-3 py-1 bg-accent/10 text-accent text-xs font-semibold rounded">
-                企業版獨享
+                {isEn ? "Enterprise Only" : "企業版獨享"}
               </div>
             </div>
 
@@ -295,12 +326,16 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">自定義工作流</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {isEn ? "Custom Workflows" : "自定義工作流"}
+              </h3>
               <p className="text-muted-foreground mb-4">
-                根據律所獨特需求，自由配置審批流程、自動化規則和業務邏輯
+                {isEn
+                  ? "Configure approval flows and automation rules to match your practice."
+                  : "根據律所獨特需求，自由配置審批流程、自動化規則和業務邏輯"}
               </p>
               <div className="inline-block px-3 py-1 bg-accent/10 text-accent text-xs font-semibold rounded">
-                企業版獨享
+                {isEn ? "Enterprise Only" : "企業版獨享"}
               </div>
             </div>
 
@@ -321,12 +356,16 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">深度分析報告</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {isEn ? "Deep Analytics" : "深度分析報告"}
+              </h3>
               <p className="text-muted-foreground mb-4">
-                AI 驅動的業務洞察、績效分析和預測性報告，助力策略決策
+                {isEn
+                  ? "AI-driven insights, performance analytics and forecasting for better decisions."
+                  : "AI 驅動的業務洞察、績效分析和預測性報告，助力策略決策"}
               </p>
               <div className="inline-block px-3 py-1 bg-accent/10 text-accent text-xs font-semibold rounded">
-                企業版獨享
+                {isEn ? "Enterprise Only" : "企業版獨享"}
               </div>
             </div>
           </div>
@@ -338,10 +377,12 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              靈活的訂閱計劃
+              {isEn ? "Flexible Subscription Plans" : "靈活的訂閱計劃"}
             </h2>
             <p className="text-lg text-muted-foreground">
-              選擇最適合您律所規模的方案
+              {isEn
+                ? "Choose the plan that best fits your firm size."
+                : "選擇最適合您律所規模的方案"}
             </p>
           </div>
 
@@ -354,17 +395,17 @@ export default function HomePage() {
                 <span className="text-sm text-muted-foreground">/月</span>
               </p>
               <p className="text-muted-foreground text-sm mb-6">
-                適合 1-2 人小型律所
+                {isEn ? "Ideal for 1-2 person firms" : "適合 1-2 人小型律所"}
               </p>
               <ul className="space-y-3 text-sm text-muted-foreground">
                 <li className="flex items-center">
-                  <span className="text-accent mr-2">✓</span> 基礎案件管理
+                  <span className="text-accent mr-2">✓</span> {isEn ? "Core case management" : "基礎案件管理"}
                 </li>
                 <li className="flex items-center">
-                  <span className="text-accent mr-2">✓</span> 客戶聯繫
+                  <span className="text-accent mr-2">✓</span> {isEn ? "Client contact tools" : "客戶聯繫"}
                 </li>
                 <li className="flex items-center">
-                  <span className="text-accent mr-2">✓</span> 時間追蹤
+                  <span className="text-accent mr-2">✓</span> {isEn ? "Time tracking" : "時間追蹤"}
                 </li>
               </ul>
             </div>
@@ -380,17 +421,17 @@ export default function HomePage() {
                 <span className="text-sm text-muted-foreground">/月</span>
               </p>
               <p className="text-muted-foreground text-sm mb-6">
-                適合 5-20 人律所
+                {isEn ? "Ideal for 5-20 person firms" : "適合 5-20 人律所"}
               </p>
               <ul className="space-y-3 text-sm text-muted-foreground">
                 <li className="flex items-center">
-                  <span className="text-accent mr-2">✓</span> 完整功能
+                  <span className="text-accent mr-2">✓</span> {isEn ? "Full feature set" : "完整功能"}
                 </li>
                 <li className="flex items-center">
-                  <span className="text-accent mr-2">✓</span> 多用戶協作
+                  <span className="text-accent mr-2">✓</span> {isEn ? "Multi-user collaboration" : "多用戶協作"}
                 </li>
                 <li className="flex items-center">
-                  <span className="text-accent mr-2">✓</span> 進階報告
+                  <span className="text-accent mr-2">✓</span> {isEn ? "Advanced reports" : "進階報告"}
                 </li>
               </ul>
             </div>
@@ -403,17 +444,17 @@ export default function HomePage() {
                 <span className="text-sm text-muted-foreground">/月</span>
               </p>
               <p className="text-muted-foreground text-sm mb-6">
-                適合 20-100 人律所
+                {isEn ? "Ideal for 20-100 person firms" : "適合 20-100 人律所"}
               </p>
               <ul className="space-y-3 text-sm text-muted-foreground">
                 <li className="flex items-center">
-                  <span className="text-accent mr-2">✓</span> 自定義工作流
+                  <span className="text-accent mr-2">✓</span> {isEn ? "Custom workflows" : "自定義工作流"}
                 </li>
                 <li className="flex items-center">
-                  <span className="text-accent mr-2">✓</span> API 訪問
+                  <span className="text-accent mr-2">✓</span> {isEn ? "API access" : "API 訪問"}
                 </li>
                 <li className="flex items-center">
-                  <span className="text-accent mr-2">✓</span> 優先支持
+                  <span className="text-accent mr-2">✓</span> {isEn ? "Priority support" : "優先支持"}
                 </li>
               </ul>
             </div>
@@ -423,17 +464,17 @@ export default function HomePage() {
               <h3 className="text-xl font-semibold text-white mb-2">Custom</h3>
               <p className="text-3xl font-bold text-accent mb-4">按需報價</p>
               <p className="text-muted-foreground text-sm mb-6">
-                適合大型律所
+                {isEn ? "Ideal for large firms" : "適合大型律所"}
               </p>
               <ul className="space-y-3 text-sm text-muted-foreground">
                 <li className="flex items-center">
-                  <span className="text-accent mr-2">✓</span> 完全定制化
+                  <span className="text-accent mr-2">✓</span> {isEn ? "Fully customised" : "完全定制化"}
                 </li>
                 <li className="flex items-center">
-                  <span className="text-accent mr-2">✓</span> 專業實施
+                  <span className="text-accent mr-2">✓</span> {isEn ? "Professional implementation" : "專業實施"}
                 </li>
                 <li className="flex items-center">
-                  <span className="text-accent mr-2">✓</span> 24/7 支持
+                  <span className="text-accent mr-2">✓</span> {isEn ? "24/7 support" : "24/7 支持"}
                 </li>
               </ul>
             </div>
@@ -444,7 +485,7 @@ export default function HomePage() {
               href="/signup"
               className="inline-flex items-center justify-center rounded-full bg-primary hover:bg-blue-800 text-white font-semibold text-lg py-6 px-8"
             >
-              開始免費試用
+              {isEn ? "Start Free Trial" : "開始免費試用"}
             </Link>
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardContent, Badge } from '@/components/ui';
 import Link from 'next/link';
 
@@ -14,6 +15,8 @@ interface DashboardStats {
 
 export default function DashboardPage() {
   const { data: session } = useSession();
+  const pathname = usePathname() || '/';
+  const isEn = pathname.startsWith('/en');
   const [stats, setStats] = useState<DashboardStats>({
     totalCases: 0,
     activeCases: 0,
@@ -43,8 +46,13 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-teal-dark">Dashboard</h1>
-          <p className="text-cool-gray mt-1">Welcome back, {session?.user?.name || 'User'}</p>
+          <h1 className="text-3xl font-bold text-teal-dark">
+            {isEn ? 'Dashboard' : '儀表板'}
+          </h1>
+          <p className="text-cool-gray mt-1">
+            {isEn ? 'Welcome back, ' : '歡迎回來，'}
+            {session?.user?.name || 'User'}
+          </p>
         </div>
       </div>
 
@@ -54,7 +62,9 @@ export default function DashboardPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-cool-gray">Total Cases</p>
+                <p className="text-sm text-cool-gray">
+                  {isEn ? 'Total Cases' : '案件總數'}
+                </p>
                 <p className="text-3xl font-bold text-charcoal mt-2">
                   {loading ? '-' : stats.totalCases}
                 </p>
@@ -72,7 +82,9 @@ export default function DashboardPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-cool-gray">Active Cases</p>
+                <p className="text-sm text-cool-gray">
+                  {isEn ? 'Active Cases' : '進行中案件'}
+                </p>
                 <p className="text-3xl font-bold text-charcoal mt-2">
                   {loading ? '-' : stats.activeCases}
                 </p>
@@ -90,7 +102,9 @@ export default function DashboardPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-cool-gray">Total Clients</p>
+                <p className="text-sm text-cool-gray">
+                  {isEn ? 'Total Clients' : '客戶總數'}
+                </p>
                 <p className="text-3xl font-bold text-charcoal mt-2">
                   {loading ? '-' : stats.totalClients}
                 </p>
@@ -108,7 +122,9 @@ export default function DashboardPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-cool-gray">Pending Invoices</p>
+                <p className="text-sm text-cool-gray">
+                  {isEn ? 'Pending Invoices' : '待處理發票'}
+                </p>
                 <p className="text-3xl font-bold text-charcoal mt-2">
                   {loading ? '-' : stats.pendingInvoices}
                 </p>
@@ -126,7 +142,7 @@ export default function DashboardPage() {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
+          <CardTitle>{isEn ? 'Quick Actions' : '快速操作'}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -141,8 +157,12 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-semibold text-charcoal">New Case</p>
-                  <p className="text-sm text-cool-gray">Create a new case</p>
+                  <p className="font-semibold text-charcoal">
+                    {isEn ? 'New Case' : '新增案件'}
+                  </p>
+                  <p className="text-sm text-cool-gray">
+                    {isEn ? 'Create a new case' : '建立一宗新的案件'}
+                  </p>
                 </div>
               </div>
             </Link>
@@ -158,8 +178,12 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-semibold text-charcoal">New Client</p>
-                  <p className="text-sm text-cool-gray">Add a new client</p>
+                  <p className="font-semibold text-charcoal">
+                    {isEn ? 'New Client' : '新增客戶'}
+                  </p>
+                  <p className="text-sm text-cool-gray">
+                    {isEn ? 'Add a new client' : '新增一位客戶'}
+                  </p>
                 </div>
               </div>
             </Link>
@@ -175,8 +199,12 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-semibold text-charcoal">Log Time</p>
-                  <p className="text-sm text-cool-gray">Track billable hours</p>
+                  <p className="font-semibold text-charcoal">
+                    {isEn ? 'Log Time' : '登記工時'}
+                  </p>
+                  <p className="text-sm text-cool-gray">
+                    {isEn ? 'Track billable hours' : '記錄可收費的工作時數'}
+                  </p>
                 </div>
               </div>
             </Link>

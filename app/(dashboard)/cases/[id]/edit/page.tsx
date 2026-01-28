@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import { useRouter, useParams, usePathname } from "next/navigation";
+import Link from "next/link";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
@@ -24,6 +24,8 @@ export default function EditCasePage() {
   const router = useRouter();
   const params = useParams();
   const id = params?.id as string;
+  const pathname = usePathname() || "/";
+  const isEn = pathname.startsWith("/en");
   const [loading, setLoading] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
   const [error, setError] = useState('');
@@ -58,7 +60,9 @@ export default function EditCasePage() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to fetch case');
+        throw new Error(
+          data.error || (isEn ? 'Failed to fetch case' : '載入案件資料失敗')
+        );
       }
 
       setFormData({
@@ -128,7 +132,9 @@ export default function EditCasePage() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to update case');
+        throw new Error(
+          data.error || (isEn ? 'Failed to update case' : '更新案件失敗')
+        );
       }
 
       router.push(`/cases/${id}`);
@@ -158,14 +164,14 @@ export default function EditCasePage() {
       <div className="mb-6">
         <Link href={`/cases/${id}`}>
           <Button variant="text" size="sm">
-            ← Back to Case
+            ← {isEn ? 'Back to Case' : '返回案件詳情'}
           </Button>
         </Link>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Edit Case</CardTitle>
+          <CardTitle>{isEn ? 'Edit Case' : '編輯案件'}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -177,7 +183,7 @@ export default function EditCasePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Input
-                label="Title"
+                label={isEn ? 'Title' : '案件標題'}
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
@@ -185,14 +191,30 @@ export default function EditCasePage() {
               />
 
               <Select
-                label="Client"
+                label={isEn ? 'Client' : '客戶'}
                 name="clientId"
                 value={formData.clientId}
                 onChange={handleChange}
                 required
-                helperText={clients.length === 0 ? "No clients available. Please create a client first." : undefined}
+                helperText={
+                  clients.length === 0
+                    ? isEn
+                      ? 'No clients available. Please create a client first.'
+                      : '目前沒有客戶資料，請先建立客戶。'
+                    : undefined
+                }
                 options={[
-                  { value: '', label: clients.length === 0 ? 'No clients available' : 'Select a client' },
+                  {
+                    value: '',
+                    label:
+                      clients.length === 0
+                        ? isEn
+                          ? 'No clients available'
+                          : '暫無客戶'
+                        : isEn
+                        ? 'Select a client'
+                        : '選擇客戶',
+                  },
                   ...clients.map((client) => ({
                     value: client.id,
                     label: `${client.firstName} ${client.lastName}`,
@@ -201,38 +223,38 @@ export default function EditCasePage() {
               />
 
               <Select
-                label="Category"
+                label={isEn ? 'Category' : '案件類別'}
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
                 required
                 options={[
-                  { value: 'CIVIL', label: 'Civil' },
-                  { value: 'CRIMINAL', label: 'Criminal' },
-                  { value: 'CORPORATE', label: 'Corporate' },
-                  { value: 'FAMILY', label: 'Family' },
-                  { value: 'PROPERTY', label: 'Property' },
-                  { value: 'IMMIGRATION', label: 'Immigration' },
-                  { value: 'LABOUR', label: 'Labour' },
-                  { value: 'OTHER', label: 'Other' },
+                  { value: 'CIVIL', label: isEn ? 'Civil' : '民事' },
+                  { value: 'CRIMINAL', label: isEn ? 'Criminal' : '刑事' },
+                  { value: 'CORPORATE', label: isEn ? 'Corporate' : '公司/商業' },
+                  { value: 'FAMILY', label: isEn ? 'Family' : '家事' },
+                  { value: 'PROPERTY', label: isEn ? 'Property' : '物業' },
+                  { value: 'IMMIGRATION', label: isEn ? 'Immigration' : '入境' },
+                  { value: 'LABOUR', label: isEn ? 'Labour' : '勞工' },
+                  { value: 'OTHER', label: isEn ? 'Other' : '其他' },
                 ]}
               />
 
               <Select
-                label="Status"
+                label={isEn ? 'Status' : '狀態'}
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
                 options={[
-                  { value: 'PENDING', label: 'Pending' },
-                  { value: 'ACTIVE', label: 'Active' },
-                  { value: 'COMPLETED', label: 'Completed' },
-                  { value: 'ARCHIVED', label: 'Archived' },
+                  { value: 'PENDING', label: isEn ? 'Pending' : '待處理' },
+                  { value: 'ACTIVE', label: isEn ? 'Active' : '進行中' },
+                  { value: 'COMPLETED', label: isEn ? 'Completed' : '已完成' },
+                  { value: 'ARCHIVED', label: isEn ? 'Archived' : '已封存' },
                 ]}
               />
 
               <Input
-                label="Filing Date"
+                label={isEn ? 'Filing Date' : '立案日期'}
                 name="filingDate"
                 type="date"
                 value={formData.filingDate}
@@ -240,7 +262,7 @@ export default function EditCasePage() {
               />
 
               <Input
-                label="Closing Date"
+                label={isEn ? 'Closing Date' : '結案日期'}
                 name="closingDate"
                 type="date"
                 value={formData.closingDate}
@@ -248,19 +270,19 @@ export default function EditCasePage() {
               />
 
               <Input
-                label="Court Reference"
+                label={isEn ? 'Court Reference' : '法院檔案編號'}
                 name="courtReference"
                 value={formData.courtReference}
                 onChange={handleChange}
               />
 
               <Select
-                label="Assigned Lawyer"
+                label={isEn ? 'Assigned Lawyer' : '負責律師'}
                 name="assignedLawyerId"
                 value={formData.assignedLawyerId}
                 onChange={handleChange}
                 options={[
-                  { value: '', label: 'Unassigned' },
+                  { value: '', label: isEn ? 'Unassigned' : '未指派' },
                   ...lawyers.map((lawyer) => ({
                     value: lawyer.id,
                     label: lawyer.name || 'Unknown',
@@ -269,7 +291,7 @@ export default function EditCasePage() {
               />
 
               <Input
-                label="Estimated Budget (HKD)"
+                label={isEn ? 'Estimated Budget (HKD)' : '預計費用（港幣）'}
                 name="estimatedBudget"
                 type="number"
                 step="0.01"
@@ -278,7 +300,7 @@ export default function EditCasePage() {
               />
 
               <Input
-                label="Actual Cost (HKD)"
+                label={isEn ? 'Actual Cost (HKD)' : '實際費用（港幣）'}
                 name="actualCost"
                 type="number"
                 step="0.01"
@@ -288,7 +310,7 @@ export default function EditCasePage() {
             </div>
 
             <Textarea
-              label="Description"
+              label={isEn ? 'Description' : '案件描述'}
               name="description"
               value={formData.description}
               onChange={handleChange}
@@ -296,7 +318,7 @@ export default function EditCasePage() {
             />
 
             <Textarea
-              label="Notes"
+              label={isEn ? 'Notes' : '內部備註'}
               name="notes"
               value={formData.notes}
               onChange={handleChange}
@@ -306,11 +328,11 @@ export default function EditCasePage() {
             <div className="flex gap-4 justify-end">
               <Link href={`/cases/${id}`}>
                 <Button type="button" variant="secondary">
-                  Cancel
+                  {isEn ? 'Cancel' : '取消'}
                 </Button>
               </Link>
               <Button type="submit" loading={loading}>
-                Update Case
+                {isEn ? 'Update Case' : '更新案件'}
               </Button>
             </div>
           </form>

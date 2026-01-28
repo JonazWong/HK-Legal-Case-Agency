@@ -2,12 +2,15 @@
 
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button, Input, Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui';
 
 export default function LoginPage() {
   const router = useRouter();
+  const pathname = usePathname() || '/';
+  const isEn = pathname.startsWith('/en');
+  const localePrefix = isEn ? '/en' : '/zh';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -28,26 +31,43 @@ export default function LoginPage() {
       if (result?.error) {
         setError(result.error);
       } else {
-        router.push('/dashboard');
-        router.refresh();
+        try {
+          const sessionRes = await fetch('/api/auth/session');
+          const sessionData = sessionRes.ok ? await sessionRes.json() : null;
+          const role = sessionData?.user?.role as string | undefined;
+
+          if (role === 'CLIENT') {
+            router.push(`${localePrefix}/client`);
+          } else {
+            router.push(`${localePrefix}/dashboard`);
+          }
+        } catch {
+          router.push(`${localePrefix}/dashboard`);
+        } finally {
+          router.refresh();
+        }
       }
     } catch (err) {
-      setError('An unexpected error occurred');
+      setError(isEn ? 'An unexpected error occurred' : '發生未預期的錯誤');
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleSignIn = () => {
-    signIn('google', { callbackUrl: '/dashboard' });
+    signIn('google', { callbackUrl: `${localePrefix}/dashboard` });
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-off-white px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl text-center text-teal-dark">Welcome Back</CardTitle>
-          <CardDescription className="text-center">Sign in to your account to continue</CardDescription>
+          <CardTitle className="text-2xl text-center text-teal-dark">
+            {isEn ? 'Welcome Back' : '歡迎回來'}
+          </CardTitle>
+          <CardDescription className="text-center">
+            {isEn ? 'Sign in to your account to continue' : '請登入以繼續使用系統'}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -58,25 +78,25 @@ export default function LoginPage() {
             )}
 
             <Input
-              label="Email Address"
+              label={isEn ? 'Email Address' : '電郵地址'}
               type="email"
-              placeholder="your@email.com"
+              placeholder={isEn ? 'your@email.com' : 'your@email.com'}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
 
             <Input
-              label="Password"
+              label={isEn ? 'Password' : '密碼'}
               type="password"
-              placeholder="Enter your password"
+              placeholder={isEn ? 'Enter your password' : '輸入密碼'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
 
             <Button type="submit" fullWidth loading={loading}>
-              Sign In
+              {isEn ? 'Sign In' : '登入'}
             </Button>
 
             <div className="relative my-6">
@@ -84,7 +104,9 @@ export default function LoginPage() {
                 <div className="w-full border-t border-light-gray"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-cool-gray">Or continue with</span>
+                <span className="px-2 bg-white text-cool-gray">
+                  {isEn ? 'Or continue with' : '或使用其他方式登入'}
+                </span>
               </div>
             </div>
 
@@ -101,25 +123,25 @@ export default function LoginPage() {
                   <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                   <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                 </svg>
-                Sign in with Google
+                {isEn ? 'Sign in with Google' : '使用 Google 登入'}
               </Button>
             )}
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-cool-gray">
-              Don&apos;t have an account?{' '}
-              <Link href="/signup" className="text-mint-green hover:underline font-medium">
-                Sign up
+              {isEn ? "Don't have an account?" : '還未建立帳戶？'}{' '}
+              <Link href={`${localePrefix}/signup`} className="text-mint-green hover:underline font-medium">
+                {isEn ? 'Sign up' : '建立帳戶'}
               </Link>
             </p>
           </div>
 
           <div className="mt-4 text-center">
             <p className="text-sm text-cool-gray">
-              Demo accounts: owner@wonglaw.hk / staff@wonglaw.hk
+              {isEn ? 'Demo accounts' : '示範帳戶'}: owner@wonglaw.hk / staff@wonglaw.hk
               <br />
-              Password: demo123456
+              {isEn ? 'Password' : '密碼'}: demo123456
             </p>
           </div>
         </CardContent>
