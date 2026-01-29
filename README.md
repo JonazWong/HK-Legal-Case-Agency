@@ -29,6 +29,12 @@ A professional case management platform for Hong Kong legal professionals, built
 
 ## Getting Started
 
+### Important: Firewall Configuration
+
+If you're running this project in a restricted network environment, please review the [Firewall Configuration Guide](FIREWALL.md) for required network access rules and how to disable Prisma telemetry.
+
+如果您在受限網路環境中運行此專案，請查看[防火牆配置指南](FIREWALL.md)了解所需的網路存取規則以及如何禁用 Prisma 遙測。
+
 ### 1. Clone the repository
 
 ```bash
@@ -163,12 +169,15 @@ npm run prisma:seed
 | Variable | Description | Required |
 |----------|-------------|----------|
 | `DATABASE_URL` | PostgreSQL connection string | Yes |
+| `CHECKPOINT_DISABLE` | Disable Prisma telemetry (set to `1`) | Recommended |
 | `NEXTAUTH_SECRET` | Secret for NextAuth.js | Yes |
 | `NEXTAUTH_URL` | Base URL of the application | Yes |
 | `GOOGLE_CLIENT_ID` | Google OAuth client ID | No |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth client secret | No |
 | `LINKEDIN_CLIENT_ID` | LinkedIn OAuth client ID | No |
 | `LINKEDIN_CLIENT_SECRET` | LinkedIn OAuth client secret | No |
+
+**Note**: See [FIREWALL.md](FIREWALL.md) for network configuration in restricted environments.
 
 ## Subscription Tiers
 
