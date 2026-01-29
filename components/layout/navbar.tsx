@@ -16,9 +16,20 @@ export function Navbar() {
     { name: 'Time Tracking', href: '/time' },
     { name: 'Invoices', href: '/invoices' },
     { name: 'Documents', href: '/documents' },
+    { name: 'Public Search', href: '/public-search' },
   ];
 
-  const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
+  const isActive = (href: string) => {
+    if (!pathname) return false;
+    return (
+      pathname === href ||
+      pathname.startsWith(href + '/') ||
+      pathname === `/en${href}` ||
+      pathname === `/zh${href}` ||
+      pathname.startsWith(`/en${href}/`) ||
+      pathname.startsWith(`/zh${href}/`)
+    );
+  };
 
   return (
     <nav className="bg-teal-dark text-white shadow-lg">

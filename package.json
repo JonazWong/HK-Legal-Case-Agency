@@ -6,11 +6,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio",
+    "prisma:generate": "CHECKPOINT_DISABLE=1 prisma generate",
+    "prisma:migrate": "CHECKPOINT_DISABLE=1 prisma migrate dev",
+    "prisma:studio": "CHECKPOINT_DISABLE=1 prisma studio",
     "prisma:seed": "tsx prisma/seed.ts",
-    "db:setup": "prisma generate && prisma migrate dev && prisma db seed"
+    "db:setup": "CHECKPOINT_DISABLE=1 prisma generate && CHECKPOINT_DISABLE=1 prisma migrate dev && prisma db seed",
+    "track:cases": "tsx scripts/track-cases.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -34,13 +35,15 @@
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",
     "autoprefixer": "^10.4.20",
-    "eslint": "^8.57.0",
+    "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.4",
     "postcss": "^8.4.41",
     "prisma": "^5.17.0",
     "tailwindcss": "^3.4.10",
     "tsx": "^4.7.0",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1"
   },
   "version": "1.0.0",
   "description": "A professional case management platform for Hong Kong legal professionals, built with Next.js, PostgreSQL, and Prisma.",
