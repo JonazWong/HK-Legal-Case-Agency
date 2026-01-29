@@ -133,6 +133,39 @@ environment:
 
 ## 疑難排解 / Troubleshooting
 
+### Windows 系統相容性 / Windows Compatibility
+
+專案的 npm scripts 使用 Unix 風格的環境變數語法 (`CHECKPOINT_DISABLE=1`)，這在 Windows Command Prompt 中可能無法運作。
+
+The project's npm scripts use Unix-style environment variable syntax (`CHECKPOINT_DISABLE=1`), which may not work in Windows Command Prompt.
+
+**Windows 使用者的解決方案 / Solutions for Windows users:**
+
+1. **使用 Git Bash** (推薦 / Recommended)
+   ```bash
+   # Git Bash 支援 Unix 風格指令
+   npm run prisma:generate
+   ```
+
+2. **使用 WSL (Windows Subsystem for Linux)**
+   ```bash
+   # 在 WSL 環境中執行
+   npm run prisma:generate
+   ```
+
+3. **手動設定環境變數 / Manually set environment variable**
+   
+   在 `.env` 檔案中新增 / Add to `.env` file:
+   ```env
+   CHECKPOINT_DISABLE=1
+   ```
+
+4. **PowerShell 臨時設定 / PowerShell temporary setting**
+   ```powershell
+   $env:CHECKPOINT_DISABLE=1
+   npm run prisma:generate
+   ```
+
 ### Prisma 仍然嘗試連線到 checkpoint.prisma.io
 ### Prisma still tries to connect to checkpoint.prisma.io
 
