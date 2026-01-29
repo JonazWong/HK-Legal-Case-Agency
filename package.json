@@ -10,7 +10,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "prisma:seed": "tsx prisma/seed.ts",
-    "db:setup": "prisma generate && prisma migrate dev && prisma db seed"
+    "db:setup": "prisma generate && prisma migrate dev && prisma db seed",
+    "track:cases": "tsx scripts/track-cases.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
