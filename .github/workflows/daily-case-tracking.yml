@@ -1,0 +1,49 @@
+name: Daily Case Tracking
+
+on:
+  # Run daily at 6:00 AM Hong Kong Time (22:00 UTC previous day)
+  schedule:
+    - cron: '0 22 * * *'
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  track-cases:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npm run prisma:generate
+
+      - name: Run case tracking
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npm run track:cases
+        continue-on-error: false
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "Case tracking failed!"
+          echo "Time: $(date)"
+          echo "Please check the logs for details."
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Case Tracking Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Time**: $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
