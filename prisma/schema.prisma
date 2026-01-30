@@ -309,3 +309,27 @@ model Message {
   @@index([senderId])
   @@index([createdAt])
 }
+
+model PublicCase {
+  id              String   @id @default(cuid())
+  source          String   // e.g., "JUDICIARY", "HKLII", "NEWS"
+  externalId      String?  // ID from the source website
+  caseNumber      String?  // e.g., HCCC 123/2023
+  title           String
+  content         String   @db.Text
+  category        String?  // e.g., "CIVIL", "CRIMINAL"
+  court           String?  // e.g., "High Court"
+  judge           String?
+  hearingDate     DateTime?
+  publishedAt     DateTime @default(now())
+  url             String?
+  tags            String?  // Comma separated tags
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([source])
+  @@index([caseNumber])
+  @@index([hearingDate])
+  @@index([title])
+  @@unique([source, externalId])
+}
