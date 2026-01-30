@@ -7,7 +7,6 @@ import {
   Button,
   Card,
   Input,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -156,19 +155,21 @@ export default function PublicSearchPage() {
               />
             </div>
             
-            <Select
+            <select
               value={source}
               onChange={(e) => setSource(e.target.value)}
+              className="w-full px-4 py-2 border rounded-md text-charcoal bg-white focus:outline-none focus:ring-2 focus:ring-mint-green focus:border-transparent transition-colors border-light-gray"
             >
               <option value="">{isEn ? 'All Sources' : '所有來源'}</option>
               <option value="JUDICIARY">{isEn ? 'Judiciary' : '司法機構'}</option>
               <option value="NEWS">{isEn ? 'News' : '新聞'}</option>
               <option value="HKLII">{isEn ? 'HKLII' : '香港法律資訊研究所'}</option>
-            </Select>
+            </select>
 
-            <Select
+            <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
+              className="w-full px-4 py-2 border rounded-md text-charcoal bg-white focus:outline-none focus:ring-2 focus:ring-mint-green focus:border-transparent transition-colors border-light-gray"
             >
               <option value="">{isEn ? 'All Categories' : '所有類別'}</option>
               <option value="CIVIL">{isEn ? 'Civil' : '民事'}</option>
@@ -179,11 +180,12 @@ export default function PublicSearchPage() {
               <option value="IMMIGRATION">{isEn ? 'Immigration' : '入境'}</option>
               <option value="LABOUR">{isEn ? 'Labour' : '勞工'}</option>
               <option value="OTHER">{isEn ? 'Other' : '其他'}</option>
-            </Select>
+            </select>
 
-            <Select
+            <select
               value={court}
               onChange={(e) => setCourt(e.target.value)}
+              className="w-full px-4 py-2 border rounded-md text-charcoal bg-white focus:outline-none focus:ring-2 focus:ring-mint-green focus:border-transparent transition-colors border-light-gray"
             >
               <option value="">{isEn ? 'All Courts' : '所有法院'}</option>
               <option value="Court of Final Appeal">{isEn ? 'Court of Final Appeal' : '終審法院'}</option>
@@ -192,7 +194,7 @@ export default function PublicSearchPage() {
               <option value="Magistrates Court">{isEn ? 'Magistrates Court' : '裁判法院'}</option>
               <option value="Labour Tribunal">{isEn ? 'Labour Tribunal' : '勞資審裁處'}</option>
               <option value="Small Claims Tribunal">{isEn ? 'Small Claims Tribunal' : '小額錢債審裁處'}</option>
-            </Select>
+            </select>
 
             <Input
               type="date"
