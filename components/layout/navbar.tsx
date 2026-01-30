@@ -9,26 +9,23 @@ export function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
 
+  // Extract locale from pathname
+  const currentLocale = pathname?.startsWith('/en') ? 'en' : 'zh';
+  const localePrefix = `/${currentLocale}`;
+
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard' },
-    { name: 'Cases', href: '/cases' },
-    { name: 'Clients', href: '/clients' },
-    { name: 'Time Tracking', href: '/time' },
-    { name: 'Invoices', href: '/invoices' },
-    { name: 'Documents', href: '/documents' },
-    { name: 'Public Search', href: '/public-search' },
+    { name: 'Dashboard', href: `${localePrefix}/dashboard` },
+    { name: 'Cases', href: `${localePrefix}/cases` },
+    { name: 'Clients', href: `${localePrefix}/clients` },
+    { name: 'Time Tracking', href: `${localePrefix}/time` },
+    { name: 'Invoices', href: `${localePrefix}/invoices` },
+    { name: 'Documents', href: `${localePrefix}/documents` },
+    { name: 'Public Search', href: `${localePrefix}/public-search` },
   ];
 
   const isActive = (href: string) => {
     if (!pathname) return false;
-    return (
-      pathname === href ||
-      pathname.startsWith(href + '/') ||
-      pathname === `/en${href}` ||
-      pathname === `/zh${href}` ||
-      pathname.startsWith(`/en${href}/`) ||
-      pathname.startsWith(`/zh${href}/`)
-    );
+    return pathname === href || pathname.startsWith(href + '/');
   };
 
   return (
@@ -36,7 +33,7 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
-            <Link href="/dashboard" className="flex items-center">
+            <Link href={`${localePrefix}/dashboard`} className="flex items-center">
               <span className="text-xl font-semibold">HK Legal</span>
             </Link>
             <div className="hidden md:ml-10 md:flex md:space-x-4">
@@ -60,7 +57,7 @@ export function Navbar() {
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => signOut({ callbackUrl: '/login' })}
+              onClick={() => signOut({ callbackUrl: `${localePrefix}/login` })}
               className="bg-white text-teal-dark hover:bg-light-gray border-white"
             >
               Sign Out
