@@ -1,21 +1,34 @@
 import { TrackingEngine } from '../lib/tracking/engine';
 import { JudiciarySource } from '../lib/tracking/sources/judiciary';
 import { NewsRSSSource } from '../lib/tracking/sources/news.rss';
+import { getEnabledSources, getCurrentDelay, getCurrentConcurrency } from '../lib/tracking/rss-config';
 
 async function main() {
   console.log('='.repeat(60));
   console.log('Starting HK Legal Case Tracking');
   console.log(`Time: ${new Date().toISOString()}`);
+  console.log(`Current Hour: ${new Date().getHours()}:00`);
+  console.log(`Request Delay: ${getCurrentDelay()}ms`);
+  console.log(`Concurrency: ${getCurrentConcurrency()}`);
   console.log('='.repeat(60));
 
   const engine = new TrackingEngine();
 
   try {
-    // Register sources
-    // These can be easily swapped or added to
+    // Register sources - 使用配置系統
     console.log('\n📋 Registering data sources...');
+    
+    // 司法機構（模擬資料）
     engine.registerSource(new JudiciarySource());
-    engine.registerSource(new NewsRSSSource('https://example-news.com/legal/rss'));
+    
+    // 從配置檔載入已啟用的 RSS 來源
+    const enabledSources = getEnabledSources();
+    console.log(`  Found ${enabledSources.length} enabled RSS sources`);
+    
+    for (const config of enabledSources) {
+      engine.registerSource(new NewsRSSSource(config.url));
+    }
+    
     console.log('✓ Data sources registered successfully\n');
 
     // Run tracking

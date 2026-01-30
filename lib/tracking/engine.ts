@@ -3,10 +3,15 @@ import { IDataSource } from './types';
 
 export class TrackingEngine {
   private sources: IDataSource[] = [];
+  private requestDelay: number = 2000; // 2 秒延遲，遵守爬蟲禮儀
 
   registerSource(source: IDataSource) {
     this.sources.push(source);
     console.log(`  ✓ Registered: ${source.name}`);
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   async runDailyTracking() {
@@ -20,7 +25,8 @@ export class TrackingEngine {
     let totalCasesProcessed = 0;
     let totalErrors = 0;
     
-    for (const source of this.sources) {
+    for (let i = 0; i < this.sources.length; i++) {
+      const source = this.sources[i];
       try {
         console.log(`${'─'.repeat(60)}`);
         console.log(`📥 Fetching from: ${source.name}`);
@@ -31,6 +37,12 @@ export class TrackingEngine {
         
         if (cases.length === 0) {
           console.log(`  ℹ️  No cases to process from ${source.name}`);
+          
+          // 在來源之間加入延遲（除了最後一個）
+          if (i < this.sources.length - 1) {
+            console.log(`  ⏳ Waiting ${this.requestDelay / 1000}s before next source...`);
+            await this.delay(this.requestDelay);
+          }
           continue;
         }
         
@@ -90,13 +102,25 @@ export class TrackingEngine {
         
         totalCasesProcessed += successCount;
         totalErrors += errorCount;
+        
+        // 在來源之間加入延遲（除了最後一個）
+        if (i < this.sources.length - 1) {
+          console.log(`  ⏳ Waiting ${this.requestDelay / 1000}s before next source...`);
+          await this.delay(this.requestDelay);
+        }
       } catch (error) {
         totalErrors++;
         console.error(`\n✗ Error fetching from ${source.name}:`, error instanceof Error ? error.message : error);
         if (error instanceof Error && error.stack) {
           console.error('Stack trace:', error.stack);
         }
+        
+        // 即使出錯也要延遲
+        if (i < this.sources.length - 1) {
+          await this.delay(this.requestDelay);
+        }
       }
+    }
     }
     
     console.log(`\n${'='.repeat(60)}`);
