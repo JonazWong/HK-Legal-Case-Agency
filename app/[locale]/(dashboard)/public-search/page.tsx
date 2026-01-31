@@ -14,12 +14,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui';
+import { CaseNumberLink, CaseLinksList, AutoLinkText } from '@/lib/case-linking/use-case-linking';
 
 interface PublicCase {
   id: string;
   source: string;
   caseNumber: string | null;
   title: string;
+  content: string | null;
   category: string | null;
   court: string | null;
   hearingDate: string | null;
@@ -47,6 +49,7 @@ export default function PublicSearchPage() {
   const [startDate, setStartDate] = useState(searchParams.get('startDate') || '');
   const [endDate, setEndDate] = useState(searchParams.get('endDate') || '');
   const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page') || '1'));
+  const [expandedCase, setExpandedCase] = useState<string | null>(null);
   
   const [cases, setCases] = useState<PublicCase[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
@@ -246,34 +249,91 @@ export default function PublicSearchPage() {
               </TableHeader>
               <TableBody>
                 {cases.map((c) => (
-                  <TableRow key={c.id}>
-                    <TableCell className="whitespace-nowrap">
-                      {new Date(c.hearingDate ?? c.publishedAt).toLocaleDateString('en-GB')}
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="info">{c.source}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="font-medium text-charcoal">{c.caseNumber ?? '—'}</div>
-                      <div className="text-sm text-cool-gray truncate max-w-md">{c.title}</div>
-                    </TableCell>
-                    <TableCell>{c.category ?? 'OTHER'}</TableCell>
-                    <TableCell>{c.court ?? '—'}</TableCell>
-                    <TableCell>
-                      {c.url ? (
-                        <a 
-                          href={c.url} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-mint-green hover:underline"
-                        >
-                          {isEn ? 'View' : '查看'}
-                        </a>
-                      ) : (
-                        '—'
-                      )}
-                    </TableCell>
-                  </TableRow>
+                  <>
+                    <TableRow 
+                      key={c.id}
+                      onClick={() => setExpandedCase(expandedCase === c.id ? null : c.id)}
+                      className="cursor-pointer hover:bg-teal-50"
+                    >
+                      <TableCell className="whitespace-nowrap">
+                        {new Date(c.hearingDate ?? c.publishedAt).toLocaleDateString('en-GB')}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="info">{c.source}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="space-y-1">
+                          {/* 🔗 智能案件編號連結 */}
+                          {c.caseNumber ? (
+                            <CaseNumberLink 
+                              caseNumber={c.caseNumber}
+                              className="font-medium text-teal-600 hover:text-teal-700"
+                            />
+                          ) : (
+                            <div className="font-medium text-gray-400">—</div>
+                          )}
+                          
+                          {/* 📄 標題（自動連結內含的案件編號） */}
+                          <div className="text-sm text-cool-gray max-w-md">
+                            <AutoLinkText text={c.title} />
+                          </div>
+                          
+                          {/* 展開/收合指示 */}
+                          {c.content && (
+                            <div className="text-xs text-teal-600 flex items-center gap-1 mt-1">
+                              {expandedCase === c.id ? '▼' : '▶'} 
+                              {isEn ? 'Click to view details' : '點擊查看詳情'}
+                            </div>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>{c.category ?? 'OTHER'}</TableCell>
+                      <TableCell>{c.court ?? '—'}</TableCell>
+                      <TableCell>
+                        {c.url ? (
+                          <a 
+                            href={c.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-teal-600 hover:text-teal-700 hover:underline inline-flex items-center gap-1"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {isEn ? 'View Source' : '查看來源'}
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
+                        ) : (
+                          <span className="text-gray-400">—</span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                    
+                    {/* 展開的詳情區域 */}
+                    {expandedCase === c.id && c.content && (
+                      <TableRow key={`${c.id}-details`}>
+                        <TableCell colSpan={6} className="bg-teal-50/50 p-6">
+                          <div className="space-y-4">
+                            <div>
+                              <h4 className="font-semibold text-teal-800 mb-2">
+                                {isEn ? 'Content' : '內容'}
+                              </h4>
+                              <div className="text-sm text-gray-700 whitespace-pre-wrap">
+                                <AutoLinkText text={c.content} />
+                              </div>
+                            </div>
+                            
+                            {/* 顯示所有找到的相關案件編號 */}
+                            <CaseLinksList 
+                              text={`${c.title} ${c.content}`}
+                              showJudiciary={true}
+                              showLegalRef={false}
+                            />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </>
                 ))}
               </TableBody>
             </Table>

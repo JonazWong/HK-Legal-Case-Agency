@@ -1,5 +1,7 @@
 import { prisma } from '@/lib/db';
 import { IDataSource } from './types';
+import { enhancePublicCaseWithCaseNumber } from '@/lib/case-linking/case-indexer';
+import { generateCaseLinks } from '@/lib/case-linking/case-number-parser';
 
 export class TrackingEngine {
   private sources: IDataSource[] = [];
@@ -54,6 +56,21 @@ export class TrackingEngine {
             const externalId =
               c.externalId ?? c.caseNumber ?? `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 
+            // 🔍 智能提取案件編號（如果沒有提供）
+            let caseNumber = c.caseNumber;
+            if (!caseNumber) {
+              caseNumber = await enhancePublicCaseWithCaseNumber(c.title, c.content || null);
+            }
+            
+            // 🔗 如果有案件編號，生成 HKLII 連結
+            let enhancedUrl = c.url;
+            if (caseNumber && !c.url) {
+              const links = generateCaseLinks(caseNumber);
+              if (links?.hklii) {
+                enhancedUrl = links.hklii;
+              }
+            }
+
             await prisma.publicCase.upsert({
               where: {
                 source_externalId: {
@@ -63,6 +80,7 @@ export class TrackingEngine {
               },
               update: {
                 externalId,
+                caseNumber, // ✅ 更新自動提取的案件編號
                 title: c.title,
                 content: c.content,
                 category: c.category,
@@ -70,13 +88,13 @@ export class TrackingEngine {
                 judge: c.judge,
                 hearingDate: c.hearingDate,
                 publishedAt: c.publishedAt,
-                url: c.url,
+                url: enhancedUrl, // ✅ 使用增強的 URL
                 tags: c.tags?.join(','),
               },
               create: {
                 source: c.source,
                 externalId,
-                caseNumber: c.caseNumber,
+                caseNumber, // ✅ 儲存自動提取的案件編號
                 title: c.title,
                 content: c.content,
                 category: c.category,
@@ -84,7 +102,7 @@ export class TrackingEngine {
                 judge: c.judge,
                 hearingDate: c.hearingDate,
                 publishedAt: c.publishedAt || new Date(),
-                url: c.url,
+                url: enhancedUrl, // ✅ 使用增強的 URL
                 tags: c.tags?.join(','),
               },
             });
