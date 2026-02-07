@@ -7,7 +7,7 @@ import { prisma } from '@/lib/db';
 import { extractCaseNumbers, generateCaseLinks } from './case-number-parser';
 
 export interface CaseReference {
-  publicCaseId: number;
+  publicCaseId: string;
   referencedCaseNumber: string;
   sourceType: 'title' | 'content' | 'tags';
   hkliiLink: string | null;
@@ -18,7 +18,7 @@ export interface CaseReference {
 /**
  * 從 PublicCase 文本中提取案件編號並建立索引
  */
-export async function indexPublicCaseReferences(publicCaseId: number): Promise<CaseReference[]> {
+export async function indexPublicCaseReferences(publicCaseId: string): Promise<CaseReference[]> {
   const publicCase = await prisma.publicCase.findUnique({
     where: { id: publicCaseId },
     select: {
@@ -118,7 +118,7 @@ export async function indexAllPublicCases(): Promise<number> {
 /**
  * 根據案件編號查找相關的 PublicCase
  */
-export async function findRelatedPublicCases(caseNumber: string): Promise<number[]> {
+export async function findRelatedPublicCases(caseNumber: string): Promise<string[]> {
   const cases = await prisma.publicCase.findMany({
     where: {
       OR: [

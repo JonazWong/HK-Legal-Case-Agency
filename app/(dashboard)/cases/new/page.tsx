@@ -94,7 +94,7 @@ export default function NewCasePage() {
 
       if (!res.ok) {
         throw new Error(
-          data.error || (isEn ? 'Failed to create case' : '建立案件失敗')
+          data.error || (isEn ? 'Failed to create case' : '新增檔案失敗')
         );
       }
 
@@ -125,7 +125,7 @@ export default function NewCasePage() {
       <Card>
         <CardHeader>
           <CardTitle>
-            {isEn ? 'Create New Case' : '新增案件'}
+            {isEn ? 'Create New Case' : '新增檔案'}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -287,7 +287,7 @@ export default function NewCasePage() {
                 </Button>
               </Link>
               <Button type="submit" loading={loading}>
-                {isEn ? 'Create Case' : '建立案件'}
+                {isEn ? 'Create Case' : '新增檔案'}
               </Button>
             </div>
           </form>

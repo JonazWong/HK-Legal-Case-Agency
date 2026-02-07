@@ -88,7 +88,8 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const validatedData = caseSchema.parse(body);
 
-    // Generate case number in format HCA-YYYY-NNN
+    // Generate internal file number in format HCA-YYYY-NNN (NOT official court case number)
+    // Note: Only judiciary can assign official case numbers (stored in courtReference field)
     const year = new Date().getFullYear();
     const lastCase = await prisma.case.findFirst({
       where: {

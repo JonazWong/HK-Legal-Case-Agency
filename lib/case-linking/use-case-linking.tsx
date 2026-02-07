@@ -75,7 +75,7 @@ export function AutoLinkText({ text, className }: AutoLinkTextProps) {
     
     // 找出所有案件編號的位置
     const regex = /\b([A-Z]{2,6})\s*(\d+)\/(\d{4})\b/g;
-    let match;
+    let match: RegExpExecArray | null;
     
     while ((match = regex.exec(text)) !== null) {
       // 添加案件編號前的文本
@@ -87,21 +87,21 @@ export function AutoLinkText({ text, className }: AutoLinkTextProps) {
       }
       
       // 添加案件編號（作為連結）
-      const caseInfo = caseNumbers.find(c => c.fullNumber === match[0]);
+      const caseInfo = caseNumbers.find(c => c.fullNumber === match![0]);
       if (caseInfo) {
         result.push({
           type: 'link',
-          content: match[0],
+          content: match![0],
           caseInfo,
         });
       } else {
         result.push({
           type: 'text',
-          content: match[0],
+          content: match![0],
         });
       }
       
-      lastIndex = match.index + match[0].length;
+      lastIndex = match!.index + match![0].length;
     }
     
     // 添加剩餘文本

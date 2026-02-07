@@ -5,6 +5,7 @@ import { useRouter, useParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { formatDateShort } from '@looper-hq/nexus-utils';
 import {
   Card,
   CardHeader,
@@ -139,7 +140,7 @@ export default function CaseViewPage() {
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return isEn ? "N/A" : "—";
-    return new Date(dateString).toLocaleDateString("en-GB");
+    return formatDateShort(dateString);
   };
 
   const formatCurrency = (amount: number | null) => {

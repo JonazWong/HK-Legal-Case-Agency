@@ -3,7 +3,7 @@ import { prisma } from '../lib/db';
 async function checkNullExternalIds() {
   try {
     const nullCount = await prisma.publicCase.count({
-      where: { externalId: null }
+      where: { externalId: { equals: null as any } }
     });
 
     console.log(`\n📊 NULL externalId 統計`);
@@ -12,7 +12,7 @@ async function checkNullExternalIds() {
 
     if (nullCount > 0) {
       const cases = await prisma.publicCase.findMany({
-        where: { externalId: null },
+        where: { externalId: { equals: null as any } },
         select: { id: true, source: true, title: true, caseNumber: true, url: true }
       });
 

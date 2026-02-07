@@ -301,10 +301,10 @@ export default function DashboardPage({ params }: { params: { locale: string } }
               </div>
               <div>
                 <p className="font-semibold text-charcoal text-lg">
-                  {isEn ? 'New Case' : '新增案件'}
+                  {isEn ? 'New Case' : '新增檔案'}
                 </p>
                 <p className="text-sm text-cool-gray">
-                  {isEn ? 'Create a new case' : '建立一宗新的案件'}
+                  {isEn ? 'Create a new case' : '新增個案檔案'}
                 </p>
               </div>
             </div>

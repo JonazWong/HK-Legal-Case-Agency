@@ -1,6 +1,21 @@
 /**
  * Utility functions for formatting and common operations
+ * Now using shared @looper-hq/nexus-utils package
  */
+
+import { type ClassValue, clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+
+/**
+ * Merge Tailwind CSS classes with proper conflict resolution
+ * Used by Premier Design System components
+ */
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+
+// Re-export utilities from shared packages
+export { formatCurrency, formatDateShort, formatDateHK, formatPhoneHK } from '@looper-hq/nexus-utils';
 
 /**
  * Format a full name in "lastName, firstName" format
@@ -12,6 +27,7 @@ export function formatFullName(lastName: string, firstName: string): string {
 /**
  * Format a date string to en-GB locale (DD/MM/YYYY)
  * Returns 'N/A' if date is null or invalid
+ * @deprecated Use formatDateShort from @looper-hq/nexus-utils instead
  */
 export function formatDate(dateString: string | null | undefined): string {
   if (!dateString) return 'N/A';
@@ -20,15 +36,6 @@ export function formatDate(dateString: string | null | undefined): string {
   } catch {
     return 'N/A';
   }
-}
-
-/**
- * Format currency amount in HKD
- * Returns 'N/A' if amount is null or undefined
- */
-export function formatCurrency(amount: number | null | undefined): string {
-  if (amount === null || amount === undefined) return 'N/A';
-  return `HKD ${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 /**

@@ -191,8 +191,8 @@ export function generateCaseLinks(caseNumberOrInfo: string | CaseNumberInfo): Ca
   if (!caseInfo) return null;
   
   return {
-    hklii: generateHKLIILink(caseInfo),
-    judiciary: generateJudiciaryLink(caseInfo),
+    hklii: generateHKLIILink(caseInfo) ?? undefined,
+    judiciary: generateJudiciaryLink(caseInfo) ?? undefined,
     legalRef: `https://legalref.judiciary.hk/lrs/common/search/search_result_detail_frame.jsp?DIS=1&QS=${encodeURIComponent(caseInfo.fullNumber)}`,
     verified: false,
   };

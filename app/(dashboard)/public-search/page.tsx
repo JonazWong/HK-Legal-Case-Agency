@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui';
+import { formatDateShort } from '@looper-hq/nexus-utils';
 
 interface PublicCase {
   id: string;
@@ -248,7 +249,7 @@ export default function PublicSearchPage() {
                 {cases.map((c) => (
                   <TableRow key={c.id}>
                     <TableCell className="whitespace-nowrap">
-                      {new Date(c.hearingDate ?? c.publishedAt).toLocaleDateString('en-GB')}
+                      {formatDateShort(c.hearingDate ?? c.publishedAt)}
                     </TableCell>
                     <TableCell>
                       <Badge variant="info">{c.source}</Badge>

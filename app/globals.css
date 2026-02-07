@@ -24,6 +24,12 @@
   --input: #2D3748;
   --ring: #00D084;
   color-scheme: dark;
+  
+  /* Premier Design System Variables */
+  --premier-black: #0a0a0a;
+  --premier-gold: #D4AF37;
+  --premier-mystery: #4A148C;
+  --premier-pearl: #F5F5F5;
 }
 
 @layer base {
@@ -32,7 +38,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: "Inter", system-ui, sans-serif;
+    font-family: "Inter", "Noto Sans TC", system-ui, sans-serif;
   }
   h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
@@ -44,5 +50,70 @@
   }
   a {
     text-decoration: none;
+  }
+}
+
+/* Premier Design System - Glassmorphism Effects */
+@layer components {
+  .glass-card {
+    background: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    box-shadow: 0 8px 32px rgba(212, 175, 55, 0.15);
+  }
+
+  .glass-gold {
+    background: linear-gradient(135deg, 
+      rgba(212, 175, 55, 0.1) 0%, 
+      rgba(74, 20, 140, 0.05) 100%
+    );
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: 0 8px 32px rgba(212, 175, 55, 0.2);
+  }
+
+  .glass-mystery {
+    background: linear-gradient(135deg,
+      rgba(74, 20, 140, 0.15) 0%,
+      rgba(26, 35, 126, 0.1) 100%
+    );
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(106, 27, 154, 0.3);
+    box-shadow: 0 8px 32px rgba(74, 20, 140, 0.2);
+  }
+
+  .glass-frosted {
+    background: rgba(245, 245, 245, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Text Gradients */
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-mystery {
+    background: linear-gradient(135deg, #4A148C 0%, #1A237E 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* Support for prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

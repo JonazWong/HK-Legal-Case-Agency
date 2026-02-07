@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ParticleBackground } from "@/components/ui/particle-background";
+import { PremierButton } from "@/components/ui/premier-button";
 
 export default function HomePage() {
   const pathname = usePathname() || "/";
@@ -11,29 +13,32 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Hero Section with Background Image */}
-      <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-black">
+      <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-premier-black">
+        {/* Particle Background Effect */}
+        <ParticleBackground particleCount={40} />
+        
         {/* Background Video with Dark Overlay */}
         <video
           autoPlay
           muted
           loop
           playsInline
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover opacity-30"
         >
           <source src="/media/5636967-uhd_3840_2160_24fps.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-premier-black/60 via-premier-black/40 to-premier-black" />
 
         {/* Content */}
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="space-y-4 sm:space-y-6">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gradient-gold">
               {isEn ? "Hong Kong Legal Intelligence Platform" : "法律事務智能資料庫"}
             </h1>
-            <h2 className="text-lg sm:text-xl md:text-2xl text-accent font-semibold">
+            <h2 className="text-lg sm:text-xl md:text-2xl text-premier-gold font-semibold drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]">
               {isEn ? "AI-powered Search & Analysis" : "AI 集成搜尋分析"}
             </h2>
-            <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-premier-pearl/90 max-w-2xl mx-auto leading-relaxed">
               {isEn
                 ? "An integrated case and knowledge management platform for Hong Kong legal professionals, combining AI search with modern case workflows."
                 : "為香港法律專業人士打造的全方位案件與知識管理平台，整合智能搜尋與案件管理，提升效率、優化流程、專業可靠。"}
@@ -41,17 +46,23 @@ export default function HomePage() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4 sm:pt-8">
-              <Link
-                href={`${localePrefix}/signup`}
-                className="min-w-[220px] inline-flex items-center justify-center rounded-full bg-primary hover:bg-blue-800 text-white font-semibold text-base sm:text-lg py-4 sm:py-5 px-6"
-              >
-                {isEn ? "Start 14-day Free Trial" : "14天免費試用"}
+              <Link href={`${localePrefix}/signup`}>
+                <PremierButton 
+                  variant="primary" 
+                  size="lg"
+                  className="min-w-[220px] text-base sm:text-lg py-4 sm:py-5"
+                >
+                  {isEn ? "Start 14-day Free Trial" : "14天免費試用"}
+                </PremierButton>
               </Link>
-              <Link
-                href={`${localePrefix}/login`}
-                className="min-w-[220px] inline-flex items-center justify-center rounded-full border-2 border-accent text-accent hover:bg-accent/10 font-semibold text-base sm:text-lg py-4 sm:py-5 px-6"
-              >
-                {isEn ? "Log in to Smart Search" : "登入智能搜尋器"}
+              <Link href={`${localePrefix}/login`}>
+                <PremierButton 
+                  variant="outline" 
+                  size="lg"
+                  className="min-w-[220px] text-base sm:text-lg py-4 sm:py-5"
+                >
+                  {isEn ? "Log in to Smart Search" : "登入智能搜尋器"}
+                </PremierButton>
               </Link>
             </div>
           </div>

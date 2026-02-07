@@ -59,7 +59,7 @@ export class TrackingEngine {
             // 🔍 智能提取案件編號（如果沒有提供）
             let caseNumber = c.caseNumber;
             if (!caseNumber) {
-              caseNumber = await enhancePublicCaseWithCaseNumber(c.title, c.content || null);
+              caseNumber = (await enhancePublicCaseWithCaseNumber(c.title, c.content || null)) ?? undefined;
             }
             
             // 🔗 如果有案件編號，生成 HKLII 連結
@@ -138,7 +138,6 @@ export class TrackingEngine {
           await this.delay(this.requestDelay);
         }
       }
-    }
     }
     
     console.log(`\n${'='.repeat(60)}`);

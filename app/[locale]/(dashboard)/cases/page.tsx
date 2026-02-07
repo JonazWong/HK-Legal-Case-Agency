@@ -119,7 +119,7 @@ export default function CasesPage() {
           </p>
         </div>
         <Link href="/cases/new">
-          <Button>{isEn ? "Create New Case" : "新增案件"}</Button>
+          <Button>{isEn ? "Create New Case" : "新增檔案"}</Button>
         </Link>
       </div>
 

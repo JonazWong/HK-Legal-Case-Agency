@@ -1,0 +1,39 @@
+{
+  "name": "@looper-hq/nexus-utils",
+  "version": "1.0.0",
+  "description": "Looper HQ Nexus Platform - Shared Utilities",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "lint": "eslint src",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "date-fns": "^3.0.0",
+    "date-fns-tz": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "utilities",
+    "hong-kong",
+    "legal",
+    "formatting",
+    "validation"
+  ],
+  "author": "HK Legal Case Agency",
+  "license": "MIT"
+}

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { formatDateShort } from '@looper-hq/nexus-utils';
 import {
   Table,
   TableBody,
@@ -98,7 +99,7 @@ export default function CasesPage() {
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return isEn ? "N/A" : "—";
-    return new Date(dateString).toLocaleDateString("en-GB");
+    return formatDateShort(dateString);
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -119,7 +120,7 @@ export default function CasesPage() {
           </p>
         </div>
         <Link href="/cases/new">
-          <Button>{isEn ? "Create New Case" : "新增案件"}</Button>
+          <Button>{isEn ? "Create New Case" : "新增檔案"}</Button>
         </Link>
       </div>
 
