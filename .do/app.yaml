@@ -1,0 +1,84 @@
+# DigitalOcean App Platform Configuration
+# This file tells DigitalOcean exactly how to build and deploy your Next.js app
+# Reference: https://docs.digitalocean.com/products/app-platform/reference/app-spec/
+
+name: hk-legal-case-agency
+region: sgp
+
+services:
+  - name: web
+    # GitHub Repository Configuration
+    github:
+      repo: JonazWong/HK-Legal-Case-Agency
+      branch: main
+      deploy_on_push: true
+    
+    # Build Configuration
+    # ⚠️ CRITICAL: Must run 'npx prisma generate' before 'npm run build'
+    # This generates the Prisma Client TypeScript types required for compilation
+    build_command: npx prisma generate && npm run build
+    
+    # Runtime Configuration
+    run_command: npm start
+    
+    # Next.js output directory
+    # After build completes, this directory contains the production-ready app
+    output_dir: .next
+    
+    # Environment Detection
+    # Tells DigitalOcean this is a Next.js application
+    # This enables optimizations like automatic static file serving
+    environment_slug: node-js
+    
+    # Instance Configuration
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    
+    # HTTP Configuration
+    http_port: 8080
+    
+    # Health Check
+    health_check:
+      http_path: /
+      initial_delay_seconds: 30
+      period_seconds: 10
+      timeout_seconds: 5
+      success_threshold: 1
+      failure_threshold: 3
+    
+    # Environment Variables
+    # ⚠️ IMPORTANT: These reference variables you must set in DigitalOcean UI
+    # Go to: Settings → Components → web → Environment Variables
+    envs:
+      # Database Connection
+      - key: DATABASE_URL
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+      
+      # NextAuth.js Configuration
+      - key: NEXTAUTH_SECRET
+        scope: RUN_TIME
+        type: SECRET
+      
+      - key: NEXTAUTH_URL
+        scope: RUN_TIME
+        type: GENERAL
+      
+      # Public App URL
+      - key: NEXT_PUBLIC_APP_URL
+        scope: RUN_AND_BUILD_TIME
+        type: GENERAL
+      
+      # Node Environment
+      - key: NODE_ENV
+        value: production
+        scope: RUN_AND_BUILD_TIME
+        type: GENERAL
+
+# Database Connection (if using DigitalOcean Managed Database)
+# Uncomment and configure if you want to connect to a database in the same project
+# databases:
+#   - name: db
+#     engine: PG
+#     production: true
+#     version: "16"
