@@ -21,12 +21,10 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@looper-hq/nexus-utils": ["./packages/utils/src"],
-      "@looper-hq/nexus-types": ["./packages/types/src"],
-      "@looper-hq/nexus-config": ["./packages/config/src"]
+      "@/*": ["./*"],
+      "@components/*": ["./components/*"],
+      "@lib/*": ["./lib/*"],
+      "@app/*": ["./app/*"]
     },
     "esModuleInterop": true,
     "plugins": [
