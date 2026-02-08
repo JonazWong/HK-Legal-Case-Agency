@@ -14,9 +14,9 @@ services:
       deploy_on_push: true
     
     # Build Configuration
-    # ⚠️ CRITICAL: Must run 'npx prisma generate' before 'npm run build'
-    # This generates the Prisma Client TypeScript types required for compilation
-    build_command: npx prisma generate && npm run build
+    # ⚠️ CRITICAL: Explicitly install all dependencies (including devDependencies)
+    # Then generate Prisma Client before building
+    build_command: npm install && npx prisma generate && npm run build
     
     # Runtime Configuration
     run_command: npm start
