@@ -45,6 +45,7 @@
   "exclude": [
     "node_modules",
     "vitest.config.ts",
+    "vitest.setup.ts",
     "__tests__",
     "app/index-test-dashboard/client/**",
     "app/index-test-dashboard/server/**",
