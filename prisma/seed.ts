@@ -271,23 +271,27 @@ async function main() {
 
   console.log('✅ Created demo documents');
 
-  // Create demo invoice
-  const invoice1 = await prisma.invoice.create({
-    data: {
-      invoiceNumber: 'INV-2024-001',
-      issueDate: new Date('2024-02-01'),
-      dueDate: new Date('2024-03-01'),
-      status: InvoiceStatus.SENT,
-      subtotal: 21250.00,
-      tax: 0, // Hong Kong has no VAT/GST
-      total: 21250.00,
-      notes: 'Professional fees for January 2024',
-      firmId: demoFirm.id,
-      caseId: case1.id,
-    },
-  });
-
-  console.log('✅ Created demo invoices');
+  // Create demo invoice (with unique number using timestamp)
+  const timestamp = Date.now().toString().slice(-6);
+  try {
+    const invoice1 = await prisma.invoice.create({
+      data: {
+        invoiceNumber: `INV-2024-${timestamp}`,
+        issueDate: new Date('2024-02-01'),
+        dueDate: new Date('2024-03-01'),
+        status: InvoiceStatus.SENT,
+        subtotal: 21250.00,
+        tax: 0, // Hong Kong has no VAT/GST
+        total: 21250.00,
+        notes: 'Professional fees for January 2024',
+        firmId: demoFirm.id,
+        caseId: case1.id,
+      },
+    });
+    console.log('✅ Created demo invoices');
+  } catch (invoiceError) {
+    console.warn('⚠️  Invoice creation skipped (may already exist):', (invoiceError as any).message);
+  }
 
   // Create demo messages
   await prisma.message.createMany({
